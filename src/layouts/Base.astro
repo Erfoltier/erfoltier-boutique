@@ -45,7 +45,7 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={desc} />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#f4f4f3" />
+    <meta name="theme-color" content="#26282c" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {langs.map((l) => <link rel="alternate" hreflang={htmlLang[l]} href={new URL(href(l, path), Astro.site)} />)}
     <link rel="alternate" hreflang="x-default" href={new URL(href('ja', path), Astro.site)} />
@@ -224,8 +224,8 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
 
 <style>
   .topbar {
-    background: var(--greige);
-    color: var(--ink-2);
+    background: var(--night);
+    color: var(--on-night-muted);
     font-size: 11px;
     letter-spacing: 0.14em;
     text-align: center;
@@ -236,7 +236,7 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(250, 250, 250, 0.72);
+    background: rgba(245, 245, 245, 0.7);
     backdrop-filter: saturate(1.4) blur(18px);
     -webkit-backdrop-filter: saturate(1.4) blur(18px);
     border-bottom: 1px solid transparent;
@@ -481,8 +481,8 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
 
   .footer {
     margin-top: clamp(80px, 10vw, 140px);
-    background: linear-gradient(180deg, var(--greige) 0%, var(--greige-deep) 100%);
-    color: var(--ink-2);
+    background: linear-gradient(180deg, var(--night-2) 0%, var(--night) 100%);
+    color: var(--on-night);
     font-size: 13px;
   }
   .footer__grid {
@@ -499,16 +499,19 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
     gap: 10px;
   }
   .footer__grid a:hover {
-    color: var(--ink);
+    color: #fff;
+  }
+  .footer .logo__word {
+    color: #fff;
   }
   .footer__brand p {
     margin-top: 24px;
-    color: var(--muted);
+    color: var(--on-night-muted);
   }
   .footer__insta {
     display: inline-block;
     margin-top: 16px;
-    color: var(--gold);
+    color: var(--gold-soft);
     letter-spacing: 0.1em;
   }
   .footer__title {
@@ -516,13 +519,13 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
     font-size: 15px;
     letter-spacing: 0.24em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--on-night-muted);
     margin-bottom: 16px;
   }
   .footer__bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-block: 24px;
-    color: var(--muted);
+    color: var(--on-night-muted);
     letter-spacing: 0.1em;
   }
   @media (max-width: 800px) {

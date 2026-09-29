@@ -17,11 +17,11 @@ const art = category === 'other' ? (variant ?? 'eyewear') : category;
 
 // 写真が未登録の間は、カテゴリーごとの線画で上品なプレースホルダーを描画する
 const tones = [
-  ['#f7f7f7', '#e7e8e9'],
-  ['#f5f5f5', '#e4e5e6'],
-  ['#f8f8f8', '#eaebeb'],
-  ['#f3f3f3', '#e2e3e4'],
-  ['#f6f6f6', '#e6e7e8'],
+  ['#eeeff0', '#d6d8db'],
+  ['#ececed', '#d2d4d7'],
+  ['#f0f0f1', '#d9dbdd'],
+  ['#e9eaeb', '#cfd1d5'],
+  ['#edeeef', '#d4d6d9'],
 ];
 let h = 0;
 for (const c of seed) h = (h * 31 + c.charCodeAt(0)) >>> 0;
@@ -41,13 +41,13 @@ const gid = `g-${h.toString(36)}`;
             <stop offset="1" stop-color={to} />
           </linearGradient>
           <radialGradient id={`${gid}-l`} cx="0.42" cy="0.32" r="0.62">
-            <stop offset="0" stop-color="#fff" stop-opacity="0.75" />
+            <stop offset="0" stop-color="#fff" stop-opacity="0.6" />
             <stop offset="1" stop-color="#fff" stop-opacity="0" />
           </radialGradient>
         </defs>
         <rect width="400" height="500" fill={`url(#${gid})`} />
         <rect width="400" height="500" fill={`url(#${gid}-l)`} />
-        <g fill="none" stroke="#a9a8a4" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+        <g fill="none" stroke="#80848b" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
           {art === 'leather' && (
             <>
               <path d="M150 190 C150 138 250 138 250 190" />
@@ -167,7 +167,7 @@ const gid = `g-${h.toString(36)}`;
             </>
           )}
         </g>
-        <text x="200" y="448" text-anchor="middle" fill="#9d9fa3" font-family="'Cormorant Garamond', serif" font-size="17" letter-spacing="5">
+        <text x="200" y="448" text-anchor="middle" fill="#80848b" font-family="'Cormorant Garamond', serif" font-size="17" letter-spacing="5">
           {label}
         </text>
       </svg>
@@ -180,7 +180,7 @@ const gid = `g-${h.toString(36)}`;
     position: relative;
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    background: #f0f0f0;
+    background: #e4e5e7;
   }
   .pimg :is(img, svg) {
     width: 100%;
