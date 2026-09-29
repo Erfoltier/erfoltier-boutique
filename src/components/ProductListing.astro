@@ -1,6 +1,6 @@
 ---
 import type { Product } from '../data/catalog';
-import { brands, categories, byNewest } from '../data/catalog';
+import { brands, categories, subCategories, byNewest } from '../data/catalog';
 import { type Lang, useTranslations } from '../i18n/ui';
 import ProductCard from './ProductCard.astro';
 
@@ -9,12 +9,14 @@ interface Props {
   items: Product[];
   showCategory?: boolean;
   showBrand?: boolean;
+  showSub?: boolean;
 }
 
-const { lang, items, showCategory = true, showBrand = true } = Astro.props;
+const { lang, items, showCategory = true, showBrand = true, showSub = false } = Astro.props;
 const t = useTranslations(lang);
 const sorted = [...items].sort(byNewest);
 const usedBrands = brands.filter((b) => items.some((p) => p.brand === b.slug));
+const usedSubs = subCategories.filter((c) => items.some((p) => p.sub === c.slug));
 const usedCats = categories.filter((c) => items.some((p) => p.category === c.slug));
 const countLabel = t('products.count', { n: '{n}' });
 ---
@@ -27,6 +29,18 @@ const countLabel = t('products.count', { n: '{n}' });
           <button type="button" class="chip" data-filter-cat="" aria-pressed="true">{t('filter.all')}</button>
           {usedCats.map((c) => (
             <button type="button" class="chip" data-filter-cat={c.slug} aria-pressed="false">
+              {c.name[lang]}
+            </button>
+          ))}
+        </div>
+      )
+    }
+    {
+      showSub && (
+        <div class="chips" role="group" aria-label={t('filter.item')}>
+          <button type="button" class="chip" data-filter-sub="" aria-pressed="true">{t('filter.all')}</button>
+          {usedSubs.map((c) => (
+            <button type="button" class="chip" data-filter-sub={c.slug} aria-pressed="false">
               {c.name[lang]}
             </button>
           ))}
@@ -73,6 +87,7 @@ const countLabel = t('products.count', { n: '{n}' });
     const grid = root.querySelector<HTMLElement>('[data-grid]')!;
     const cards = [...grid.querySelectorAll<HTMLElement>('[data-product]')];
     const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-filter-cat]')];
+    const subChips = [...root.querySelectorAll<HTMLButtonElement>('[data-filter-sub]')];
     const typeChips = [...root.querySelectorAll<HTMLButtonElement>('[data-filter-type]')];
     const brandSel = root.querySelector<HTMLSelectElement>('[data-filter-brand]');
     const sortSel = root.querySelector<HTMLSelectElement>('[data-sort]')!;
@@ -83,6 +98,7 @@ const countLabel = t('products.count', { n: '{n}' });
     const params = new URLSearchParams(location.search);
     let cat = params.get('category') ?? '';
     let type = params.get('type') ?? '';
+    let subSel = params.get('item') ?? '';
     if (brandSel) brandSel.value = params.get('brand') ?? '';
     sortSel.value = params.get('sort') ?? 'new';
     if (!sortSel.value) sortSel.value = 'new';
@@ -91,6 +107,7 @@ const countLabel = t('products.count', { n: '{n}' });
       const brand = brandSel?.value ?? '';
       const sort = sortSel.value;
       chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filterCat === cat)));
+      subChips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filterSub === subSel)));
       typeChips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filterType === type)));
 
       const sorted = [...cards].sort((a, b) => {
@@ -101,7 +118,7 @@ const countLabel = t('products.count', { n: '{n}' });
       let visible = 0;
       for (const card of sorted) {
         const show =
-          (!cat || card.dataset.category === cat) && (!brand || card.dataset.brand === brand) && (!type || card.dataset.type === type);
+          (!cat || card.dataset.category === cat) && (!brand || card.dataset.brand === brand) && (!type || card.dataset.type === type) && (!subSel || card.dataset.sub === subSel);
         card.hidden = !show;
         if (show) visible++;
         grid.appendChild(card);
@@ -112,6 +129,7 @@ const countLabel = t('products.count', { n: '{n}' });
       const q = new URLSearchParams();
       if (cat) q.set('category', cat);
       if (type) q.set('type', type);
+      if (subSel) q.set('item', subSel);
       if (brand) q.set('brand', brand);
       if (sort !== 'new') q.set('sort', sort);
       const qs = q.toString();
@@ -121,6 +139,12 @@ const countLabel = t('products.count', { n: '{n}' });
     chips.forEach((c) =>
       c.addEventListener('click', () => {
         cat = c.dataset.filterCat ?? '';
+        apply();
+      }),
+    );
+    subChips.forEach((c) =>
+      c.addEventListener('click', () => {
+        subSel = c.dataset.filterSub ?? '';
         apply();
       }),
     );
@@ -144,14 +168,6 @@ const countLabel = t('products.count', { n: '{n}' });
     justify-content: space-between;
     gap: 16px 24px;
     margin-bottom: clamp(28px, 4vw, 44px);
-  }
-  .chips--type {
-    padding-left: 16px;
-    border-left: 1px solid var(--line);
-  }
-  .chips--type:first-child {
-    padding-left: 0;
-    border-left: 0;
   }
   .chips {
     display: flex;

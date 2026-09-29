@@ -45,7 +45,7 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={desc} />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#f6f4f1" />
+    <meta name="theme-color" content="#f4f4f3" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {langs.map((l) => <link rel="alternate" hreflang={htmlLang[l]} href={new URL(href(l, path), Astro.site)} />)}
     <link rel="alternate" hreflang="x-default" href={new URL(href('ja', path), Astro.site)} />
@@ -236,7 +236,7 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(250, 249, 246, 0.72);
+    background: rgba(250, 250, 250, 0.72);
     backdrop-filter: saturate(1.4) blur(18px);
     -webkit-backdrop-filter: saturate(1.4) blur(18px);
     border-bottom: 1px solid transparent;
@@ -368,7 +368,7 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
     list-style: none;
     background: var(--paper);
     border: 1px solid var(--line);
-    box-shadow: 0 12px 30px rgba(22, 20, 15, 0.08);
+    box-shadow: 0 12px 30px rgba(40, 42, 46, 0.08);
   }
   .lang a {
     display: block;
@@ -435,14 +435,14 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
     position: fixed;
     inset: 0;
     z-index: 100;
-    background: rgba(59, 55, 51, 0.18);
+    background: rgba(53, 55, 58, 0.18);
     backdrop-filter: blur(6px);
   }
   .drawer__panel {
     width: min(360px, 88vw);
     height: 100%;
     overflow-y: auto;
-    background: rgba(250, 249, 246, 0.88);
+    background: rgba(250, 250, 250, 0.88);
     backdrop-filter: blur(20px);
     padding: 24px 28px 40px;
   }

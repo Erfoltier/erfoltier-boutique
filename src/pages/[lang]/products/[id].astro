@@ -2,7 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import ProductImage from '../../../components/ProductImage.astro';
 import ProductCard from '../../../components/ProductCard.astro';
-import { products, getBrand, getCategory, isNew, type Product } from '../../../data/catalog';
+import { products, getBrand, getCategory, isNew, subCategories, type Product } from '../../../data/catalog';
 import { type Lang, type UIKey, langs, href, formatPrice, useTranslations } from '../../../i18n/ui';
 
 export function getStaticPaths() {
@@ -18,7 +18,7 @@ const related = products.filter((x) => x.brand === p.brand && x.id !== p.id).sli
 const fallbackRelated = related.length ? related : products.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 4);
 const specs: [UIKey, string][] = [
   ['product.brand', brand.name],
-  ['product.category', category.name[lang]],
+  ['product.category', p.sub ? `${category.name[lang]}（${subCategories.find((s) => s.slug === p.sub)!.name[lang]}）` : category.name[lang]],
   ['product.material', p.material[lang]],
   ['product.color', p.color[lang]],
   ['product.size', p.size],
@@ -41,7 +41,7 @@ const grades = ['N', 'S', 'A', 'AB', 'B'] as const;
 
     <div class="pdp">
       <div class="pdp__gallery">
-        <ProductImage category={p.category} label={brand.name} image={p.image} alt={`${brand.name} ${p.name[lang]}`} seed={p.id} eager />
+        <ProductImage category={p.category} variant={p.sub} label={brand.name} image={p.image} alt={`${brand.name} ${p.name[lang]}`} seed={p.id} eager />
       </div>
 
       <div class="pdp__info">

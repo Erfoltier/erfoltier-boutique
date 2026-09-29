@@ -8,6 +8,12 @@ import type { Localized } from '../i18n/ui';
 
 export type CategorySlug = 'apparel' | 'leather' | 'fabric' | 'watches' | 'accessories' | 'other';
 export type Condition = 'N' | 'S' | 'A' | 'AB' | 'B';
+export type SubSlug = 'eyewear' | 'charm' | 'scarf' | 'hat' | 'tie' | 'kitchen' | 'cushion' | 'linen';
+
+export interface SubCategory {
+  slug: SubSlug;
+  name: Localized;
+}
 
 export interface Category {
   slug: CategorySlug;
@@ -27,6 +33,8 @@ export interface Product {
   id: string;
   brand: string;
   category: CategorySlug;
+  /** 「その他」カテゴリー内のアイテム種別 */
+  sub?: SubSlug;
   name: Localized;
   price: number;
   condition: Condition;
@@ -66,9 +74,9 @@ export const categories: Category[] = [
     en: 'Fabric Goods',
     name: { ja: 'ファブリック', en: 'Fabric Goods', ko: '패브릭 제품' },
     description: {
-      ja: 'シルクスカーフ、キャンバスバッグ、ストールなど布製品。',
-      en: 'Silk scarves, canvas bags, stoles and other textile pieces.',
-      ko: '실크 스카프, 캔버스 백, 스톨 등 패브릭 제품.',
+      ja: 'キャンバスやナイロンなど、布素材のバッグ・ポーチ。',
+      en: 'Bags and pouches in canvas, nylon and other textiles.',
+      ko: '캔버스, 나일론 등 패브릭 소재의 가방·파우치.',
     },
   },
   {
@@ -96,11 +104,22 @@ export const categories: Category[] = [
     en: 'Others',
     name: { ja: 'その他', en: 'Others', ko: '기타' },
     description: {
-      ja: 'サングラス、バッグチャーム、ステーショナリーなど、上質な小物たち。',
-      en: 'Sunglasses, bag charms, stationery and other fine objects.',
-      ko: '선글라스, 백 참, 문구 등 고급 소품.',
+      ja: 'サングラス、チャーム、ツイリー・スカーフ、帽子、ネクタイ、キッチン用品、クッション、タオル・ブランケットなど。',
+      en: 'Sunglasses, charms, twillies and scarves, hats, ties, kitchenware, cushions, towels and blankets.',
+      ko: '선글라스, 참, 트윌리·스카프, 모자, 넥타이, 주방용품, 쿠션, 타월·블랭킷 등.',
     },
   },
+];
+
+export const subCategories: SubCategory[] = [
+  { slug: 'eyewear', name: { ja: 'サングラス', en: 'Sunglasses', ko: '선글라스' } },
+  { slug: 'charm', name: { ja: 'チャーム', en: 'Charms', ko: '참' } },
+  { slug: 'scarf', name: { ja: 'ツイリー・スカーフ', en: 'Twillies & Scarves', ko: '트윌리·스카프' } },
+  { slug: 'hat', name: { ja: '帽子', en: 'Hats', ko: '모자' } },
+  { slug: 'tie', name: { ja: 'ネクタイ', en: 'Ties', ko: '넥타이' } },
+  { slug: 'kitchen', name: { ja: 'キッチン用品', en: 'Kitchenware', ko: '주방용품' } },
+  { slug: 'cushion', name: { ja: 'クッション', en: 'Cushions', ko: '쿠션' } },
+  { slug: 'linen', name: { ja: 'タオル・ブランケット', en: 'Towels & Blankets', ko: '타월·블랭킷' } },
 ];
 
 export const brands: Brand[] = [
@@ -146,7 +165,7 @@ export const products: Product[] = [
     arrived: '2026-09-24',
   },
   {
-    id: 'EF-24004', brand: 'hermes', category: 'fabric', price: 68_000, condition: 'N',
+    id: 'EF-24004', brand: 'hermes', category: 'other', sub: 'scarf', price: 68_000, condition: 'N',
     name: L('カレ 90 シルクスカーフ', 'Carré 90 Silk Scarf', '카레 90 실크 스카프'),
     material: L('シルク100%', '100% silk', '실크 100%'), color: L('マルチカラー', 'Multicolor', '멀티컬러'),
     size: '90 × 90 cm', accessories: L('箱', 'Box', '박스'),
@@ -218,7 +237,7 @@ export const products: Product[] = [
     arrived: '2026-09-12',
   },
   {
-    id: 'EF-24013', brand: 'gucci', category: 'fabric', price: 42_000, condition: 'N',
+    id: 'EF-24013', brand: 'gucci', category: 'other', sub: 'scarf', price: 42_000, condition: 'N',
     name: L('GG ウール ストール', 'GG Wool Stole', 'GG 울 스톨'),
     material: L('ウール、シルク', 'Wool, silk', '울, 실크'), color: L('ベージュ', 'Beige', '베이지'),
     size: '180 × 45 cm', accessories: L('箱', 'Box', '박스'),
@@ -258,7 +277,7 @@ export const products: Product[] = [
     arrived: '2026-08-30',
   },
   {
-    id: 'EF-24019', brand: 'chanel', category: 'other', price: 62_000, condition: 'S',
+    id: 'EF-24019', brand: 'chanel', category: 'other', sub: 'eyewear', price: 62_000, condition: 'S',
     name: L('ココマーク サングラス', 'CC Logo Sunglasses', 'CC 로고 선글라스'),
     material: L('アセテート', 'Acetate', '아세테이트'), color: L('ブラック', 'Black', '블랙'),
     size: '54□17 140', accessories: L('ケース、クロス', 'Case, cloth', '케이스, 클로스'),
@@ -266,7 +285,7 @@ export const products: Product[] = [
     arrived: '2026-09-21',
   },
   {
-    id: 'EF-24020', brand: 'louis-vuitton', category: 'other', price: 74_000, condition: 'N',
+    id: 'EF-24020', brand: 'louis-vuitton', category: 'other', sub: 'charm', price: 74_000, condition: 'N',
     name: L('バッグチャーム・キーホルダー', 'Bag Charm & Key Holder', '백 참·키홀더'),
     material: L('メタル', 'Metal', '메탈'), color: L('ゴールド', 'Gold', '골드'),
     size: 'H11 cm', accessories: L('保存袋、箱', 'Pouch, box', '파우치, 박스'),
@@ -280,6 +299,70 @@ export const products: Product[] = [
     size: 'W25 × H18 × D8 cm', accessories: L('保存袋', 'Dust bag', '더스트백'),
     description: L('1955年のアーカイブから復刻されたホースビットが印象的です。', 'Horsebit hardware revived from the 1955 archive.', '1955년 아카이브에서 복각된 홀스빗이 인상적입니다.'),
     arrived: '2026-08-28',
+  },
+  {
+    id: 'EF-24021', brand: 'prada', category: 'fabric', price: 138_000, condition: 'A',
+    name: L('Re-Nylon ショルダーバッグ', 'Re-Nylon Shoulder Bag', 'Re-나일론 숄더백'),
+    material: L('リナイロン、サフィアーノレザー', 'Re-Nylon, Saffiano leather', '리나일론, 사피아노 레더'), color: L('ブラック', 'Black', '블랙'),
+    size: 'W22 × H18 × D6 cm', accessories: L('保存袋、ストラップ', 'Dust bag, strap', '더스트백, 스트랩'),
+    description: L('軽くて丈夫なナイロン素材。トライアングルロゴが映えるデイリーバッグです。', 'Light, durable nylon finished with the triangle logo — an everyday essential.', '가볍고 튼튼한 나일론 소재. 트라이앵글 로고가 돋보이는 데일리 백입니다.'),
+    arrived: '2026-09-27',
+  },
+  {
+    id: 'EF-24022', brand: 'hermes', category: 'other', sub: 'scarf', price: 38_000, condition: 'N',
+    name: L('ツイリー', 'Twilly', '트윌리'),
+    material: L('シルク100%', '100% silk', '실크 100%'), color: L('ブルー／ホワイト', 'Blue/White', '블루/화이트'),
+    size: '86 × 5 cm', accessories: L('箱', 'Box', '박스'),
+    description: L('バッグのハンドルに巻いたり、ヘアアクセサリーにも。', 'Wrap it around a bag handle or wear it in your hair.', '가방 핸들에 감거나 헤어 액세서리로도 활용할 수 있습니다.'),
+    arrived: '2026-09-27',
+  },
+  {
+    id: 'EF-24023', brand: 'burberry', category: 'other', sub: 'hat', price: 36_000, condition: 'A',
+    name: L('ヴィンテージチェック バケットハット', 'Vintage Check Bucket Hat', '빈티지 체크 버킷햇'),
+    material: L('コットン', 'Cotton', '코튼'), color: L('アーカイブベージュ', 'Archive beige', '아카이브 베이지'),
+    size: 'M', accessories: L('なし', 'None', '없음'),
+    description: L('リバーシブル仕様で、無地面とチェック面の両方を楽しめます。', 'Reversible — plain on one side, check on the other.', '리버시블 사양으로 무지와 체크 양면을 즐길 수 있습니다.'),
+    arrived: '2026-09-11',
+  },
+  {
+    id: 'EF-24024', brand: 'hermes', category: 'other', sub: 'tie', price: 32_000, condition: 'N',
+    name: L('シルク ネクタイ', 'Silk Tie', '실크 넥타이'),
+    material: L('シルク100%', '100% silk', '실크 100%'), color: L('ネイビー', 'Navy', '네이비'),
+    size: 'W8 cm', accessories: L('箱', 'Box', '박스'),
+    description: L('遊び心のある小紋柄。ビジネスシーンに品よく映えます。', 'A playful micro-print that stays refined for business.', '위트 있는 잔무늬 패턴. 비즈니스 룩에 품위 있게 어울립니다.'),
+    arrived: '2026-09-09',
+  },
+  {
+    id: 'EF-24025', brand: 'hermes', category: 'other', sub: 'kitchen', price: 58_000, condition: 'N',
+    name: L('ポーセリン ディナープレート 2枚セット', 'Porcelain Dinner Plates, Set of 2', '포슬린 디너 플레이트 2개 세트'),
+    material: L('ポーセリン', 'Porcelain', '포슬린'), color: L('ホワイト／ゴールド', 'White/Gold', '화이트/골드'),
+    size: 'Ø 27 cm', accessories: L('箱', 'Box', '박스'),
+    description: L('食卓を格上げする、繊細なゴールドの縁取り。ギフトにもおすすめです。', 'Delicate gold rims to elevate the table — a lovely gift.', '식탁을 한층 격조 있게 만드는 섬세한 골드 테두리. 선물로도 추천합니다.'),
+    arrived: '2026-09-07',
+  },
+  {
+    id: 'EF-24026', brand: 'gucci', category: 'other', sub: 'cushion', price: 88_000, condition: 'N',
+    name: L('GG ジャカード クッション', 'GG Jacquard Cushion', 'GG 자카드 쿠션'),
+    material: L('ウール、コットン', 'Wool, cotton', '울, 코튼'), color: L('ベージュ／グレー', 'Beige/Grey', '베이지/그레이'),
+    size: '45 × 45 cm', accessories: L('箱', 'Box', '박스'),
+    description: L('リビングにさりげなくブランドの気配を添えるクッション。', 'A cushion that brings a quiet note of the house to your living room.', '거실에 은은하게 브랜드의 분위기를 더해 주는 쿠션.'),
+    arrived: '2026-09-04',
+  },
+  {
+    id: 'EF-24027', brand: 'hermes', category: 'other', sub: 'linen', price: 118_000, condition: 'N',
+    name: L('ビーチタオル', 'Beach Towel', '비치 타월'),
+    material: L('コットン100%', '100% cotton', '코튼 100%'), color: L('ホワイト／ブルー', 'White/Blue', '화이트/블루'),
+    size: '150 × 90 cm', accessories: L('箱', 'Box', '박스'),
+    description: L('ふっくらとしたパイル地。リゾートやバスタイムを上質に。', 'Plush terry for elevated resort days and bath time.', '도톰한 파일 소재. 리조트와 욕실에서의 시간을 한층 고급스럽게.'),
+    arrived: '2026-09-03',
+  },
+  {
+    id: 'EF-24028', brand: 'burberry', category: 'other', sub: 'linen', price: 145_000, condition: 'S',
+    name: L('カシミア チェック ブランケット', 'Cashmere Check Blanket', '캐시미어 체크 블랭킷'),
+    material: L('カシミア100%', '100% cashmere', '캐시미어 100%'), color: L('アーカイブベージュ', 'Archive beige', '아카이브 베이지'),
+    size: '200 × 140 cm', accessories: L('なし', 'None', '없음'),
+    description: L('軽く暖かなカシミア。ソファに掛けるだけで空間が華やぎます。', 'Light, warm cashmere that transforms any sofa.', '가볍고 따뜻한 캐시미어. 소파에 걸쳐 두기만 해도 공간이 화사해집니다.'),
+    arrived: '2026-09-01',
   },
 ];
 

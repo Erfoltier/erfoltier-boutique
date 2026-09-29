@@ -37,3 +37,8 @@ npm run build    # dist/ に静的ファイルを出力
 ## 新品・中古の区別
 
 `condition: 'N'` の商品は「新品」、それ以外（S / A / AB / B）は「中古」として表示・絞り込みされます。
+
+## 「その他」カテゴリーのアイテム種別
+
+`category: 'other'` の商品には `sub` を指定します（`eyewear` サングラス / `charm` チャーム / `scarf` ツイリー・スカーフ / `hat` 帽子 / `tie` ネクタイ / `kitchen` キッチン用品 / `cushion` クッション / `linen` タオル・ブランケット）。
+「その他」ページでアイテム種別ごとに絞り込めます（`?item=linen` など）。種別の追加は `src/data/catalog.ts` の `subCategories` で行います。

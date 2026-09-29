@@ -19,13 +19,14 @@ const brand = getBrand(p.brand);
   data-product
   data-brand={p.brand}
   data-category={p.category}
+  data-sub={p.sub}
   data-price={p.price}
   data-type={isNew(p) ? 'new' : 'used'}
   data-arrived={p.arrived}
 >
   <a href={href(lang, `products/${p.id.toLowerCase()}/`)} class="card__link">
     <div class="card__media">
-      <ProductImage category={p.category} label={brand.name} image={p.image} alt={`${brand.name} ${p.name[lang]}`} seed={p.id} />
+      <ProductImage category={p.category} variant={p.sub} label={brand.name} image={p.image} alt={`${brand.name} ${p.name[lang]}`} seed={p.id} />
       {p.sold && <span class="card__sold">{t('product.sold')}</span>}
     </div>
     <div class="card__body">
@@ -61,7 +62,7 @@ const brand = getBrand(p.brand);
     inset: 0;
     display: grid;
     place-items: center;
-    background: rgba(252, 251, 249, 0.6);
+    background: rgba(251, 251, 251, 0.6);
     backdrop-filter: blur(3px);
     font-family: var(--font-display);
     letter-spacing: 0.3em;

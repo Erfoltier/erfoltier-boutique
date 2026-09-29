@@ -30,7 +30,7 @@ const rows = products.filter((p) => !p.sold);
               return (
                 <li class="cart-row" data-row={p.id} data-price={p.price} hidden>
                   <a href={href(lang, `products/${p.id.toLowerCase()}/`)} class="cart-row__img">
-                    <ProductImage category={p.category} label={brand.name} image={p.image} alt={`${brand.name} ${p.name[lang]}`} seed={p.id} />
+                    <ProductImage category={p.category} variant={p.sub} label={brand.name} image={p.image} alt={`${brand.name} ${p.name[lang]}`} seed={p.id} />
                   </a>
                   <div class="cart-row__info">
                     <p class="cart-row__brand">{brand.name}</p>

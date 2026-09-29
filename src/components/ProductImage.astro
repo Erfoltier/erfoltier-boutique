@@ -1,8 +1,10 @@
 ---
-import type { CategorySlug } from '../data/catalog';
+import type { CategorySlug, SubSlug } from '../data/catalog';
 
 interface Props {
   category: CategorySlug;
+  /** 「その他」のアイテム種別。線画の絵柄を切り替える */
+  variant?: SubSlug;
   label: string;
   image?: string;
   alt: string;
@@ -10,15 +12,16 @@ interface Props {
   eager?: boolean;
 }
 
-const { category, label, image, alt, seed = label, eager = false } = Astro.props;
+const { category, variant, label, image, alt, seed = label, eager = false } = Astro.props;
+const art = category === 'other' ? (variant ?? 'eyewear') : category;
 
 // 写真が未登録の間は、カテゴリーごとの線画で上品なプレースホルダーを描画する
 const tones = [
-  ['#f7f5f2', '#e9e4de'],
-  ['#f5f3f0', '#e6e1da'],
-  ['#f8f6f4', '#ebe7e2'],
-  ['#f4f2ee', '#e4dfd7'],
-  ['#f6f5f2', '#e8e4de'],
+  ['#f7f7f7', '#e7e8e9'],
+  ['#f5f5f5', '#e4e5e6'],
+  ['#f8f8f8', '#eaebeb'],
+  ['#f3f3f3', '#e2e3e4'],
+  ['#f6f6f6', '#e6e7e8'],
 ];
 let h = 0;
 for (const c of seed) h = (h * 31 + c.charCodeAt(0)) >>> 0;
@@ -44,8 +47,8 @@ const gid = `g-${h.toString(36)}`;
         </defs>
         <rect width="400" height="500" fill={`url(#${gid})`} />
         <rect width="400" height="500" fill={`url(#${gid}-l)`} />
-        <g fill="none" stroke="#b3a48f" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
-          {category === 'leather' && (
+        <g fill="none" stroke="#a9a8a4" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+          {art === 'leather' && (
             <>
               <path d="M150 190 C150 138 250 138 250 190" />
               <path d="M162 190 C162 150 238 150 238 190" />
@@ -54,7 +57,7 @@ const gid = `g-${h.toString(36)}`;
               <rect x="190" y="255" width="20" height="16" rx="2" />
             </>
           )}
-          {category === 'watches' && (
+          {art === 'watches' && (
             <>
               <path d="M178 110 H222 L228 196 M172 196 L178 110" />
               <path d="M178 304 L172 390 H228 L222 304" />
@@ -65,7 +68,7 @@ const gid = `g-${h.toString(36)}`;
               <path d="M200 206 v4 M200 290 v4 M156 250 h4 M240 250 h4" />
             </>
           )}
-          {category === 'accessories' && (
+          {art === 'accessories' && (
             <>
               <ellipse cx="200" cy="286" rx="84" ry="84" />
               <ellipse cx="200" cy="286" rx="72" ry="72" />
@@ -73,7 +76,15 @@ const gid = `g-${h.toString(36)}`;
               <path d="M178 196 H222 M200 170 L192 196 L200 214 L208 196 Z" />
             </>
           )}
-          {category === 'fabric' && (
+          {art === 'fabric' && (
+            <>
+              <path d="M150 214 C150 130 176 118 176 214 M224 214 C224 118 250 130 250 214" />
+              <path d="M116 214 H284 L270 372 H130 Z" />
+              <path d="M124 244 H276" opacity="0.5" />
+              <path d="M150 214 v30 M250 214 v30" opacity="0.5" />
+            </>
+          )}
+          {art === 'scarf' && (
             <>
               <path d="M200 130 L318 248 L200 366 L82 248 Z" />
               <path d="M200 156 L292 248 L200 340 L108 248 Z" />
@@ -81,7 +92,7 @@ const gid = `g-${h.toString(36)}`;
               <path d="M318 248 C332 290 316 330 300 360 M82 248 C68 290 84 330 100 360" />
             </>
           )}
-          {category === 'other' && (
+          {art === 'eyewear' && (
             <>
               <path d="M96 236 H304" />
               <path d="M104 236 C100 290 122 312 156 312 C188 312 196 286 194 250 L192 236" />
@@ -91,7 +102,60 @@ const gid = `g-${h.toString(36)}`;
               <path d="M130 258 L150 250 M232 258 L252 250" opacity="0.5" />
             </>
           )}
-          {category === 'apparel' && (
+          {art === 'charm' && (
+            <>
+              <circle cx="200" cy="150" r="20" />
+              <path d="M200 170 V206" stroke-dasharray="3 5" />
+              <circle cx="200" cy="232" r="24" />
+              <circle cx="200" cy="296" r="24" />
+              <circle cx="168" cy="264" r="24" />
+              <circle cx="232" cy="264" r="24" />
+              <circle cx="200" cy="264" r="9" />
+            </>
+          )}
+          {art === 'hat' && (
+            <>
+              <ellipse cx="200" cy="306" rx="124" ry="26" />
+              <path d="M128 300 C132 222 152 196 200 196 C248 196 268 222 272 300" />
+              <path d="M132 272 C170 284 230 284 268 272" />
+              <path d="M132 260 C170 272 230 272 268 260" opacity="0.5" />
+            </>
+          )}
+          {art === 'tie' && (
+            <>
+              <path d="M184 128 H216 L208 158 H192 Z" />
+              <path d="M192 158 L172 332 L200 368 L228 332 L208 158" />
+              <path d="M186 214 L214 196 M182 252 L218 228 M178 290 L222 262 M180 326 L224 298" opacity="0.55" />
+              <path d="M160 118 L184 128 M240 118 L216 128" />
+            </>
+          )}
+          {art === 'kitchen' && (
+            <>
+              <ellipse cx="200" cy="330" rx="112" ry="18" />
+              <ellipse cx="200" cy="330" rx="70" ry="10" opacity="0.5" />
+              <path d="M136 226 H264 C262 296 236 318 200 318 C164 318 138 296 136 226 Z" />
+              <path d="M262 246 C302 246 302 292 252 296" />
+              <path d="M180 200 C170 186 190 178 180 160 M204 200 C194 186 214 178 204 160 M228 200 C218 186 238 178 228 160" opacity="0.55" />
+            </>
+          )}
+          {art === 'cushion' && (
+            <>
+              <path d="M112 172 Q200 192 288 172 Q268 252 288 332 Q200 312 112 332 Q132 252 112 172 Z" />
+              <path d="M130 188 Q200 204 270 188 Q254 252 270 316 Q200 300 130 316 Q146 252 130 188 Z" opacity="0.5" />
+              <circle cx="200" cy="252" r="5" />
+              <path d="M112 172 l-10 -10 M288 172 l10 -10 M112 332 l-10 10 M288 332 l10 10" />
+            </>
+          )}
+          {art === 'linen' && (
+            <>
+              <rect x="108" y="200" width="184" height="42" rx="10" />
+              <rect x="116" y="242" width="176" height="42" rx="10" />
+              <rect x="108" y="284" width="184" height="42" rx="10" />
+              <path d="M150 200 V242 M158 242 V284 M150 284 V326" opacity="0.45" />
+              <path d="M124 326 v12 M140 326 v12 M156 326 v12 M172 326 v12 M188 326 v12 M204 326 v12 M220 326 v12 M236 326 v12 M252 326 v12 M268 326 v12 M284 326 v12" opacity="0.6" />
+            </>
+          )}
+          {art === 'apparel' && (
             <>
               <path d="M200 112 a10 10 0 1 1 10 10 v10" />
               <path d="M130 158 L200 134 L270 158" />
@@ -103,7 +167,7 @@ const gid = `g-${h.toString(36)}`;
             </>
           )}
         </g>
-        <text x="200" y="448" text-anchor="middle" fill="#a79d91" font-family="'Cormorant Garamond', serif" font-size="17" letter-spacing="5">
+        <text x="200" y="448" text-anchor="middle" fill="#9d9fa3" font-family="'Cormorant Garamond', serif" font-size="17" letter-spacing="5">
           {label}
         </text>
       </svg>
@@ -116,7 +180,7 @@ const gid = `g-${h.toString(36)}`;
     position: relative;
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    background: #f1eee9;
+    background: #f0f0f0;
   }
   .pimg :is(img, svg) {
     width: 100%;

@@ -12,6 +12,7 @@ export type Localized = Record<Lang, string>;
 
 export const ui = {
   ja: {
+    'filter.item': 'アイテム',
     'type.filter': '新品・中古',
     'type.new': '新品',
     'type.used': '中古',
@@ -143,6 +144,7 @@ export const ui = {
     'common.yen': '円',
   },
   en: {
+    'filter.item': 'Item',
     'type.filter': 'New or pre-owned',
     'type.new': 'New',
     'type.used': 'Pre-owned',
@@ -274,6 +276,7 @@ export const ui = {
     'common.yen': 'JPY',
   },
   ko: {
+    'filter.item': '아이템',
     'type.filter': '새 상품·중고',
     'type.new': '새 상품',
     'type.used': '중고',

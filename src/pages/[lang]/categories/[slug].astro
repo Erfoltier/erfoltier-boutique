@@ -24,6 +24,6 @@ const items = products.filter((p) => p.category === category.slug);
       lead={category.description[lang]}
       crumbs={[{ label: t('categories.title'), path: 'categories/' }, { label: category.name[lang] }]}
     />
-    <ProductListing lang={lang} items={items} showCategory={false} />
+    <ProductListing lang={lang} items={items} showCategory={false} showSub={category.slug === 'other'} />
   </div>
 </Base>

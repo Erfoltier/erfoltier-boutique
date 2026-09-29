@@ -2,7 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import PageHead from '../../../components/PageHead.astro';
 import ProductImage from '../../../components/ProductImage.astro';
-import { categories, products } from '../../../data/catalog';
+import { categories, products, subCategories } from '../../../data/catalog';
 import { type Lang, href, langPaths, useTranslations } from '../../../i18n/ui';
 
 export const getStaticPaths = langPaths;
@@ -29,6 +29,11 @@ const count = (slug: string) => products.filter((p) => p.category === slug).leng
                   <span class="local">{c.name[lang]}</span>
                 </h2>
                 <p>{c.description[lang]}</p>
+                {c.slug === 'other' && (
+                  <ul class="subs">
+                    {subCategories.map((sc) => <li>{sc.name[lang]}</li>)}
+                  </ul>
+                )}
                 <span class="link-arrow">{t('products.count', { n: count(c.slug) })}</span>
               </div>
             </a>
@@ -64,6 +69,20 @@ const count = (slug: string) => products.filter((p) => p.category === slug).leng
   }
   .cat-list a:hover :global(.pimg svg) {
     transform: scale(1.04);
+  }
+  .subs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: -8px 0 28px;
+    padding: 0;
+    list-style: none;
+  }
+  .subs li {
+    padding: 2px 10px;
+    border: 1px solid var(--line);
+    font-size: 11.5px;
+    color: var(--ink-2);
   }
   .cat-list__num {
     font-family: var(--font-display);
