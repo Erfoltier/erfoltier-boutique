@@ -1,0 +1,103 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHead from '../../../components/PageHead.astro';
+import ProductImage from '../../../components/ProductImage.astro';
+import { categories, products } from '../../../data/catalog';
+import { type Lang, href, langPaths, useTranslations } from '../../../i18n/ui';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const count = (slug: string) => products.filter((p) => p.category === slug).length;
+---
+
+<Base lang={lang} title={t('categories.title')} path="categories/">
+  <div class="container">
+    <PageHead lang={lang} eyebrow="Category" title={t('categories.title')} lead={t('categories.lead')} crumbs={[{ label: t('categories.title') }]} />
+    <ul class="cat-list">
+      {
+        categories.map((c, i) => (
+          <li class="reveal">
+            <a href={href(lang, `categories/${c.slug}/`)} class:list={{ rev: i % 2 === 1 }}>
+              <div class="cat-list__img">
+                <ProductImage category={c.slug} label="" alt="" seed={`cat-${c.slug}`} />
+              </div>
+              <div class="cat-list__body">
+                <span class="cat-list__num">0{i + 1}</span>
+                <h2>
+                  <span class="en">{c.en}</span>
+                  <span class="local">{c.name[lang]}</span>
+                </h2>
+                <p>{c.description[lang]}</p>
+                <span class="link-arrow">{t('products.count', { n: count(c.slug) })}</span>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .cat-list {
+    display: grid;
+    gap: clamp(40px, 6vw, 80px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .cat-list a {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+    gap: clamp(24px, 5vw, 72px);
+  }
+  .cat-list a.rev .cat-list__img {
+    order: 2;
+  }
+  .cat-list__img {
+    overflow: hidden;
+  }
+  .cat-list__img :global(.pimg) {
+    aspect-ratio: 16 / 10;
+  }
+  .cat-list a:hover :global(.pimg svg) {
+    transform: scale(1.04);
+  }
+  .cat-list__num {
+    font-family: var(--font-display);
+    color: var(--gold);
+    font-size: 18px;
+    letter-spacing: 0.2em;
+  }
+  .cat-list h2 {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+  }
+  .cat-list .en {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 48px);
+    letter-spacing: 0.06em;
+    line-height: 1.15;
+  }
+  .cat-list .local {
+    margin-top: 6px;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+  }
+  .cat-list p {
+    margin: 20px 0 28px;
+    color: var(--ink-2);
+  }
+  @media (max-width: 760px) {
+    .cat-list a {
+      grid-template-columns: 1fr;
+    }
+    .cat-list a.rev .cat-list__img {
+      order: 0;
+    }
+  }
+</style>

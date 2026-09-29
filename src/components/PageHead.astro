@@ -1,0 +1,35 @@
+---
+import { type Lang, href, useTranslations } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  crumbs?: { label: string; path?: string }[];
+}
+
+const { lang, eyebrow, title, lead, crumbs = [] } = Astro.props;
+const t = useTranslations(lang);
+const trail = [{ label: t('common.home'), path: '' }, ...crumbs];
+---
+
+<header class="page-head">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <ol>
+      {
+        trail.map((c, i) =>
+          i < trail.length - 1 && c.path !== undefined ? (
+            <li><a href={href(lang, c.path)}>{c.label}</a></li>
+          ) : (
+            <li aria-current="page">{c.label}</li>
+          ),
+        )
+      }
+    </ol>
+  </nav>
+  {eyebrow && <p class="eyebrow" style="margin-top:28px">{eyebrow}</p>}
+  <h1>{title}</h1>
+  {lead && <p>{lead}</p>}
+  <slot />
+</header>

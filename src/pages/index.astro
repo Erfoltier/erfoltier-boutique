@@ -1,0 +1,22 @@
+---
+// ルートはブラウザの言語設定に応じて各言語のトップへ振り分ける（既定は日本語）
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Erfoltier</title>
+    <meta http-equiv="refresh" content="0; url=/ja/" />
+    <link rel="canonical" href="/ja/" />
+    <script is:inline>
+      var l = (navigator.languages && navigator.languages[0]) || navigator.language || 'ja';
+      l = l.toLowerCase();
+      location.replace(l.indexOf('ko') === 0 ? '/ko/' : l.indexOf('ja') === 0 ? '/ja/' : l.indexOf('en') === 0 ? '/en/' : '/ja/');
+    </script>
+  </head>
+  <body style="background:#f8f5ef">
+    <p><a href="/ja/">日本語</a> / <a href="/en/">English</a> / <a href="/ko/">한국어</a></p>
+  </body>
+</html>

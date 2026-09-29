@@ -1,0 +1,137 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import { faq } from '../../data/site';
+import { type Lang, href, langPaths, useTranslations } from '../../i18n/ui';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const groups = faq[lang];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: groups.flatMap((g) =>
+    g.items.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })),
+  ),
+};
+---
+
+<Base lang={lang} title={t('faq.title')} path="faq/">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <div class="container narrow">
+    <PageHead lang={lang} eyebrow="FAQ" title={t('faq.title')} lead={t('faq.lead')} crumbs={[{ label: t('faq.title') }]} />
+
+    {
+      groups.map((g) => (
+        <section class="faq-group">
+          <h2>{g.title}</h2>
+          {g.items.map((item) => (
+            <details class="faq">
+              <summary>
+                <span class="faq__q">Q</span>
+                <span class="faq__text">{item.q}</span>
+                <span class="faq__icon" aria-hidden="true" />
+              </summary>
+              <div class="faq__a">
+                <span class="faq__q faq__q--a">A</span>
+                <p>{item.a}</p>
+              </div>
+            </details>
+          ))}
+        </section>
+      ))
+    }
+
+    <div class="faq-cta">
+      <p>{t('faq.lead')}</p>
+      <a href={href(lang, 'contact/')} class="btn">{t('nav.contact')}</a>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .narrow {
+    max-width: 920px;
+  }
+  .faq-group + .faq-group {
+    margin-top: 56px;
+  }
+  .faq-group h2 {
+    font-size: 18px;
+    letter-spacing: 0.14em;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .faq {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq summary {
+    display: grid;
+    grid-template-columns: 32px 1fr 20px;
+    align-items: baseline;
+    gap: 12px;
+    padding: 22px 0;
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq__q {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .faq__q--a {
+    color: var(--muted);
+  }
+  .faq__text {
+    font-size: 15px;
+  }
+  .faq__icon {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    align-self: center;
+  }
+  .faq__icon::before,
+  .faq__icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 14px;
+    height: 1px;
+    background: var(--ink);
+    transition: transform 0.3s var(--ease);
+  }
+  .faq__icon::after {
+    transform: rotate(90deg);
+  }
+  .faq[open] .faq__icon::after {
+    transform: rotate(0);
+  }
+  .faq__a {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 12px;
+    padding: 0 32px 28px 0;
+    color: var(--ink-2);
+    font-size: 14px;
+  }
+  .faq-cta {
+    margin-top: 72px;
+    padding: 48px 32px;
+    text-align: center;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    display: grid;
+    justify-items: center;
+    gap: 24px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+</style>

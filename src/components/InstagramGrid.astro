@@ -1,0 +1,70 @@
+---
+import { products, byNewest, getBrand } from '../data/catalog';
+import { site } from '../data/site';
+import type { Lang } from '../i18n/ui';
+import ProductImage from './ProductImage.astro';
+
+interface Props {
+  lang: Lang;
+  count?: number;
+}
+
+const { lang, count = 6 } = Astro.props;
+// Instagram APIと連携するまでは、新着商品の画像を投稿の代わりに並べる
+const posts = [...products].sort(byNewest).slice(0, count);
+---
+
+<ul class="insta-grid" data-count={count}>
+  {
+    posts.map((p) => (
+      <li>
+        <a href={site.instagram} target="_blank" rel="noopener">
+          <ProductImage category={p.category} label={getBrand(p.brand).name} image={p.image} alt={`${getBrand(p.brand).name} ${p.name[lang]} — Instagram`} seed={`ig-${p.id}`} />
+          <span class="insta-grid__hover" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /></svg>
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .insta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 900px) {
+    .insta-grid[data-count='6'] {
+      grid-template-columns: repeat(6, 1fr);
+    }
+    .insta-grid[data-count='12'] {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .insta-grid a {
+    position: relative;
+    display: block;
+  }
+  .insta-grid :global(.pimg) {
+    aspect-ratio: 1;
+  }
+  .insta-grid__hover {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    background: rgba(15, 14, 12, 0.45);
+    opacity: 0;
+    transition: opacity 0.4s var(--ease);
+  }
+  .insta-grid a:hover .insta-grid__hover,
+  .insta-grid a:focus-visible .insta-grid__hover {
+    opacity: 1;
+  }
+</style>

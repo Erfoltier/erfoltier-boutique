@@ -1,0 +1,287 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ProductImage from '../../../components/ProductImage.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import { products, getBrand, getCategory, type Product } from '../../../data/catalog';
+import { type Lang, type UIKey, langs, href, formatPrice, useTranslations } from '../../../i18n/ui';
+
+export function getStaticPaths() {
+  return langs.flatMap((lang) => products.map((product) => ({ params: { lang, id: product.id.toLowerCase() }, props: { product } })));
+}
+
+const lang = Astro.params.lang as Lang;
+const { product: p } = Astro.props as { product: Product };
+const t = useTranslations(lang);
+const brand = getBrand(p.brand);
+const category = getCategory(p.category);
+const related = products.filter((x) => x.brand === p.brand && x.id !== p.id).slice(0, 4);
+const fallbackRelated = related.length ? related : products.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 4);
+const specs: [UIKey, string][] = [
+  ['product.brand', brand.name],
+  ['product.category', category.name[lang]],
+  ['product.material', p.material[lang]],
+  ['product.color', p.color[lang]],
+  ['product.size', p.size],
+  ['product.accessories', p.accessories[lang]],
+  ['product.ref', p.id],
+];
+const grades = ['N', 'S', 'A', 'AB', 'B'] as const;
+---
+
+<Base lang={lang} title={`${brand.name} ${p.name[lang]}`} description={p.description[lang]} path={`products/${p.id.toLowerCase()}/`}>
+  <div class="container">
+    <nav class="breadcrumb crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href={href(lang)}>{t('common.home')}</a></li>
+        <li><a href={href(lang, 'products/')}>{t('products.title')}</a></li>
+        <li><a href={href(lang, `brands/${brand.slug}/`)}>{brand.name}</a></li>
+        <li aria-current="page">{p.name[lang]}</li>
+      </ol>
+    </nav>
+
+    <div class="pdp">
+      <div class="pdp__gallery">
+        <ProductImage category={p.category} label={brand.name} image={p.image} alt={`${brand.name} ${p.name[lang]}`} seed={p.id} eager />
+      </div>
+
+      <div class="pdp__info">
+        <a href={href(lang, `brands/${brand.slug}/`)} class="pdp__brand">{brand.name}</a>
+        <h1 class="pdp__name">{p.name[lang]}</h1>
+        <p class="pdp__price">
+          {formatPrice(p.price, lang)}<small>（{t('product.taxIncluded')}）</small>
+        </p>
+
+        <div class="pdp__cond">
+          <span class="label">{t('product.condition')}</span>
+          <span class="rank">{p.condition}</span>
+          <span class="pdp__cond-text">{t(`condition.${p.condition}` as UIKey)}</span>
+        </div>
+
+        {
+          p.sold ? (
+            <button class="btn btn--block" type="button" disabled>
+              {t('product.sold')}
+            </button>
+          ) : (
+            <>
+              <button
+                class="btn btn--block add"
+                type="button"
+                data-add-to-cart={p.id}
+                data-label-add={t('product.addToCart')}
+                data-label-in={t('product.inCart')}
+                data-cart-url={href(lang, 'cart/')}
+                aria-pressed="false"
+              >
+                <span data-label>{t('product.addToCart')}</span>
+              </button>
+              <p class="pdp__unique">{t('product.unique')}</p>
+            </>
+          )
+        }
+
+        <ul class="pdp__assure">
+          <li>{t('product.authentic')}</li>
+          <li>{t('product.shipping')}</li>
+          <li>{t('product.returns')}</li>
+        </ul>
+
+        <p class="pdp__desc">{p.description[lang]}</p>
+
+        <h2 class="pdp__h">{t('product.details')}</h2>
+        <dl class="spec">
+          {
+            specs.map(([k, v]) => (
+              <div>
+                <dt>{t(k)}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        <details class="grades">
+          <summary>{t('condition.title')}</summary>
+          <dl>
+            {
+              grades.map((g) => (
+                <div class:list={{ current: g === p.condition }}>
+                  <dt><span class="rank">{g}</span></dt>
+                  <dd>{t(`condition.${g}` as UIKey)}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </details>
+      </div>
+    </div>
+
+    {
+      fallbackRelated.length > 0 && (
+        <section class="section related">
+          <div class="section-head">
+            <h2>{t('product.related')}</h2>
+            <a href={href(lang, `brands/${brand.slug}/`)} class="link-arrow">{t('home.viewAll')}</a>
+          </div>
+          <div class="product-grid">
+            {fallbackRelated.map((x) => <ProductCard product={x} lang={lang} />)}
+          </div>
+        </section>
+      )
+    }
+  </div>
+</Base>
+
+<style>
+  .crumbs {
+    padding-block: 28px;
+  }
+  .pdp {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: clamp(32px, 6vw, 88px);
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .pdp {
+      grid-template-columns: 1fr;
+    }
+  }
+  .pdp__gallery {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+  @media (max-width: 860px) {
+    .pdp__gallery {
+      position: static;
+      margin-inline: calc(var(--gutter) * -1);
+    }
+  }
+  .pdp__brand {
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 0.24em;
+    color: var(--gold);
+  }
+  .pdp__name {
+    margin-top: 10px;
+    font-size: clamp(22px, 2.6vw, 30px);
+    letter-spacing: 0.06em;
+  }
+  .pdp__price {
+    margin-top: 20px;
+    font-size: 24px;
+    letter-spacing: 0.04em;
+    font-feature-settings: 'tnum';
+  }
+  .pdp__price small {
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: 6px;
+  }
+  .pdp__cond {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 24px 0 32px;
+    padding: 16px 0;
+    border-block: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .pdp__cond .label {
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .btn.add[aria-pressed='true'],
+  .btn.add[aria-pressed='true']:hover {
+    background: var(--paper);
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .add[aria-pressed='true']::before {
+    content: '✓';
+  }
+  .pdp__unique {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+  }
+  .pdp__assure {
+    margin: 28px 0 0;
+    padding: 20px 24px;
+    list-style: none;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    font-size: 12.5px;
+    display: grid;
+    gap: 6px;
+  }
+  .pdp__assure li::before {
+    content: '—';
+    color: var(--gold);
+    margin-right: 10px;
+  }
+  .pdp__desc {
+    margin-top: 32px;
+    color: var(--ink-2);
+  }
+  .pdp__h {
+    margin-top: 40px;
+    font-size: 15px;
+    letter-spacing: 0.16em;
+  }
+  .spec {
+    margin: 16px 0 0;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .spec div {
+    display: grid;
+    grid-template-columns: 8.5em 1fr;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .spec dt {
+    color: var(--muted);
+  }
+  .spec dd {
+    margin: 0;
+  }
+  .grades {
+    margin-top: 24px;
+    font-size: 13px;
+  }
+  .grades summary {
+    cursor: pointer;
+    color: var(--ink-2);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--line);
+  }
+  .grades dl {
+    margin: 16px 0 0;
+    display: grid;
+    gap: 8px;
+  }
+  .grades dl div {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    opacity: 0.7;
+  }
+  .grades dl div.current {
+    opacity: 1;
+    font-weight: 500;
+  }
+  .grades dd {
+    margin: 0;
+  }
+  .related .section-head h2 {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    letter-spacing: 0.1em;
+  }
+</style>

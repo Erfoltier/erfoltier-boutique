@@ -1,0 +1,128 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHead from '../../../components/PageHead.astro';
+import { brands, products } from '../../../data/catalog';
+import { type Lang, href, langPaths, useTranslations } from '../../../i18n/ui';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+
+// 頭文字ごとにグループ化（A–Z インデックス）
+const sorted = [...brands].sort((a, b) => a.name.localeCompare(b.name, 'en'));
+const groups = new Map<string, typeof brands>();
+for (const b of sorted) {
+  const k = b.name[0].toUpperCase();
+  groups.set(k, [...(groups.get(k) ?? []), b]);
+}
+const letters = [...groups.keys()];
+const count = (slug: string) => products.filter((p) => p.brand === slug).length;
+---
+
+<Base lang={lang} title={t('brands.title')} path="brands/">
+  <div class="container">
+    <PageHead lang={lang} eyebrow="Brand" title={t('brands.title')} lead={t('brands.lead')} crumbs={[{ label: t('brands.title') }]}>
+      <nav class="az" aria-label="A–Z">
+        {letters.map((l) => <a href={`#brand-${l}`}>{l}</a>)}
+      </nav>
+    </PageHead>
+
+    <div class="brand-index">
+      {
+        letters.map((l) => (
+          <section id={`brand-${l}`} class="brand-group">
+            <h2 class="brand-group__letter">{l}</h2>
+            <ul>
+              {groups.get(l)!.map((b) => (
+                <li>
+                  <a href={href(lang, `brands/${b.slug}/`)}>
+                    <span class="bn">{b.name}</span>
+                    <span class="bk">{lang === 'ja' ? b.kana : b.origin[lang]}</span>
+                    <span class="bc">{t('brands.items', { n: count(b.slug) })}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</Base>
+
+<style>
+  .az {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 28px;
+  }
+  .az a {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    font-family: var(--font-display);
+    font-size: 16px;
+  }
+  .az a:hover {
+    border-color: var(--ink);
+  }
+  .brand-group {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 24px;
+    padding-block: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand-group__letter {
+    font-family: var(--font-display);
+    font-size: 40px;
+    line-height: 1;
+    color: var(--gold);
+  }
+  .brand-group ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 4px 32px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .brand-group a {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    column-gap: 12px;
+    padding: 12px 0;
+  }
+  .brand-group a:hover .bn {
+    color: var(--gold);
+  }
+  .bn {
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 0.14em;
+    line-height: 1.3;
+    transition: color 0.25s;
+  }
+  .bk {
+    grid-row: 2;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .bc {
+    grid-row: 1 / 3;
+    grid-column: 2;
+    font-size: 11px;
+    color: var(--muted);
+    align-self: center;
+  }
+  @media (max-width: 600px) {
+    .brand-group {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+</style>

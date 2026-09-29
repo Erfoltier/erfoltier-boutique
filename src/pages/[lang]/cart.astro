@@ -1,0 +1,243 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import ProductImage from '../../components/ProductImage.astro';
+import { products, getBrand } from '../../data/catalog';
+import { type Lang, type UIKey, href, formatPrice, langPaths, locales, useTranslations } from '../../i18n/ui';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+// 静的サイトのため全商品の行を描画しておき、カートに入っている行だけを表示する
+const rows = products.filter((p) => !p.sold);
+---
+
+<Base lang={lang} title={t('cart.title')} path="cart/">
+  <div class="container">
+    <PageHead lang={lang} eyebrow="Cart" title={t('cart.title')} crumbs={[{ label: t('cart.title') }]} />
+
+    <div class="cart" data-cart data-locale={locales[lang]}>
+      <div class="cart__empty" data-cart-empty>
+        <p>{t('cart.empty')}</p>
+        <a href={href(lang, 'products/')} class="btn btn--ghost">{t('cart.continue')}</a>
+      </div>
+
+      <div class="cart__layout" data-cart-filled hidden>
+        <ul class="cart__items">
+          {
+            rows.map((p) => {
+              const brand = getBrand(p.brand);
+              return (
+                <li class="cart-row" data-row={p.id} data-price={p.price} hidden>
+                  <a href={href(lang, `products/${p.id.toLowerCase()}/`)} class="cart-row__img">
+                    <ProductImage category={p.category} label={brand.name} image={p.image} alt={`${brand.name} ${p.name[lang]}`} seed={p.id} />
+                  </a>
+                  <div class="cart-row__info">
+                    <p class="cart-row__brand">{brand.name}</p>
+                    <a href={href(lang, `products/${p.id.toLowerCase()}/`)} class="cart-row__name">{p.name[lang]}</a>
+                    <p class="cart-row__meta">
+                      <span class="rank">{p.condition}</span> {t(`condition.${p.condition}` as UIKey)}
+                    </p>
+                    <p class="cart-row__meta">{t('product.ref')}：{p.id}</p>
+                  </div>
+                  <div class="cart-row__side">
+                    <p class="cart-row__price">{formatPrice(p.price, lang)}</p>
+                    <button type="button" class="cart-row__remove" data-remove={p.id}>{t('cart.remove')}</button>
+                  </div>
+                </li>
+              );
+            })
+          }
+        </ul>
+
+        <aside class="summary">
+          <dl>
+            <div><dt>{t('cart.subtotal')}</dt><dd data-subtotal></dd></div>
+            <div><dt>{t('cart.shipping')}</dt><dd>{t('cart.free')}</dd></div>
+            <div class="summary__total"><dt>{t('cart.total')}<small>（{t('product.taxIncluded')}）</small></dt><dd data-total></dd></div>
+          </dl>
+          <a href={href(lang, 'contact/')} class="btn btn--block" data-checkout>{t('cart.checkout')}</a>
+          <p class="summary__note">{t('cart.checkoutNote')}</p>
+          <a href={href(lang, 'products/')} class="summary__continue">{t('cart.continue')}</a>
+        </aside>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { cart } from '../../scripts/cart';
+
+  const root = document.querySelector<HTMLElement>('[data-cart]')!;
+  const fmt = new Intl.NumberFormat(root.dataset.locale, { style: 'currency', currency: 'JPY', currencyDisplay: 'narrowSymbol' });
+  const rows = [...root.querySelectorAll<HTMLElement>('[data-row]')];
+
+  function render() {
+    const ids = cart.items();
+    let total = 0;
+    let n = 0;
+    for (const row of rows) {
+      const show = ids.includes(row.dataset.row!);
+      row.hidden = !show;
+      if (show) {
+        total += Number(row.dataset.price);
+        n++;
+      }
+    }
+    root.querySelector<HTMLElement>('[data-cart-empty]')!.hidden = n > 0;
+    root.querySelector<HTMLElement>('[data-cart-filled]')!.hidden = n === 0;
+    root.querySelector('[data-subtotal]')!.textContent = fmt.format(total);
+    root.querySelector('[data-total]')!.textContent = fmt.format(total);
+
+    // お問い合わせフォームに管理番号を引き継ぐ
+    const checkout = root.querySelector<HTMLAnchorElement>('[data-checkout]')!;
+    const url = new URL(checkout.href);
+    url.searchParams.set('ref', rows.filter((r) => !r.hidden).map((r) => r.dataset.row).join(', '));
+    url.searchParams.set('type', 'order');
+    checkout.href = url.toString();
+  }
+
+  root.addEventListener('click', (e) => {
+    const btn = (e.target as Element).closest<HTMLButtonElement>('[data-remove]');
+    if (btn) cart.remove(btn.dataset.remove!);
+  });
+  document.addEventListener('cart:change', render);
+  render();
+</script>
+
+<style>
+  .cart__empty {
+    padding: 48px 0 24px;
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: 28px;
+    color: var(--muted);
+  }
+  .cart__empty[hidden],
+  .cart__layout[hidden],
+  .cart-row[hidden] {
+    display: none;
+  }
+  .cart__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .cart__layout {
+      grid-template-columns: 1fr;
+    }
+  }
+  .cart__items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .cart-row {
+    display: grid;
+    grid-template-columns: 110px 1fr auto;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .cart-row__brand {
+    font-family: var(--font-display);
+    letter-spacing: 0.18em;
+    font-size: 15px;
+    line-height: 1.3;
+  }
+  .cart-row__name {
+    display: block;
+    margin-top: 4px;
+    font-size: 14px;
+  }
+  .cart-row__meta {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cart-row__side {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .cart-row__price {
+    font-feature-settings: 'tnum';
+  }
+  .cart-row__remove {
+    border: 0;
+    background: none;
+    padding: 4px 0;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  .cart-row__remove:hover {
+    color: var(--danger);
+  }
+  @media (max-width: 560px) {
+    .cart-row {
+      grid-template-columns: 88px 1fr;
+    }
+    .cart-row__side {
+      grid-column: 2;
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+  .summary {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    padding: 32px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+  }
+  .summary dl {
+    margin: 0 0 28px;
+    display: grid;
+    gap: 12px;
+    font-size: 14px;
+  }
+  .summary dl div {
+    display: flex;
+    justify-content: space-between;
+  }
+  .summary dd {
+    margin: 0;
+    font-feature-settings: 'tnum';
+  }
+  .summary__total {
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 17px;
+  }
+  .summary__total small {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .summary__note {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .summary__continue {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>

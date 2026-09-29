@@ -1,0 +1,18 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHead from '../../../components/PageHead.astro';
+import ProductListing from '../../../components/ProductListing.astro';
+import { products } from '../../../data/catalog';
+import { type Lang, langPaths, useTranslations } from '../../../i18n/ui';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+---
+
+<Base lang={lang} title={t('products.title')} path="products/">
+  <div class="container">
+    <PageHead lang={lang} eyebrow="All Items" title={t('products.title')} crumbs={[{ label: t('products.title') }]} />
+    <ProductListing lang={lang} items={products} />
+  </div>
+</Base>

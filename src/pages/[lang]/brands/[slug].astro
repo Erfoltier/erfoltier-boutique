@@ -1,0 +1,29 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHead from '../../../components/PageHead.astro';
+import ProductListing from '../../../components/ProductListing.astro';
+import { brands, products, type Brand } from '../../../data/catalog';
+import { type Lang, langs, useTranslations } from '../../../i18n/ui';
+
+export function getStaticPaths() {
+  return langs.flatMap((lang) => brands.map((brand) => ({ params: { lang, slug: brand.slug }, props: { brand } })));
+}
+
+const lang = Astro.params.lang as Lang;
+const { brand } = Astro.props as { brand: Brand };
+const t = useTranslations(lang);
+const items = products.filter((p) => p.brand === brand.slug);
+---
+
+<Base lang={lang} title={brand.name} path={`brands/${brand.slug}/`}>
+  <div class="container">
+    <PageHead
+      lang={lang}
+      eyebrow={brand.origin[lang]}
+      title={brand.name}
+      lead={lang === 'ja' ? brand.kana : undefined}
+      crumbs={[{ label: t('brands.title'), path: 'brands/' }, { label: brand.name }]}
+    />
+    <ProductListing lang={lang} items={items} showBrand={false} />
+  </div>
+</Base>

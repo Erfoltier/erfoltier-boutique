@@ -1,0 +1,427 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import ProductImage from '../../components/ProductImage.astro';
+import InstagramGrid from '../../components/InstagramGrid.astro';
+import { products, categories, brands, byNewest } from '../../data/catalog';
+import { site } from '../../data/site';
+import { type Lang, href, langPaths, useTranslations } from '../../i18n/ui';
+
+export const getStaticPaths = langPaths;
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const newest = [...products].filter((p) => !p.sold).sort(byNewest).slice(0, 8);
+const countBy = (key: 'brand' | 'category', v: string) => products.filter((p) => p[key] === v).length;
+const titleLines = t('hero.title').split('\n');
+---
+
+<Base lang={lang} path="">
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow">{t('hero.eyebrow')}</p>
+        <h1 class="hero__title">
+          {titleLines.map((line) => <span>{line}</span>)}
+        </h1>
+        <p class="hero__lead">{t('hero.lead')}</p>
+        <div class="hero__cta">
+          <a href={href(lang, 'products/')} class="btn btn--light">{t('hero.cta')}</a>
+          <a href={href(lang, 'brands/')} class="hero__link">{t('hero.cta2')} →</a>
+        </div>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <div class="arch arch--back">
+          <ProductImage category="watches" label="ROLEX" alt="" seed="hero-2" eager />
+        </div>
+        <div class="arch arch--front">
+          <ProductImage category="leather" label="HERMÈS" alt="" seed="hero-1" eager />
+        </div>
+        <span class="hero__mark">Authentic · Curated · Timeless</span>
+      </div>
+    </div>
+    <ul class="hero__cats container">
+      {categories.map((c) => <li><a href={href(lang, `categories/${c.slug}/`)}>{c.en}</a></li>)}
+    </ul>
+  </section>
+
+  <section class="section container">
+    <div class="section-head reveal">
+      <h2>{t('home.new')}<span class="sub">{t('home.newSub')}</span></h2>
+      <a href={href(lang, 'products/')} class="link-arrow">{t('home.viewAll')}</a>
+    </div>
+    <div class="product-grid reveal">
+      {newest.map((p) => <ProductCard product={p} lang={lang} />)}
+    </div>
+  </section>
+
+  <section class="section cats-section">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>{t('home.categories')}<span class="sub">{t('home.categoriesSub')}</span></h2>
+        <a href={href(lang, 'categories/')} class="link-arrow">{t('home.viewAll')}</a>
+      </div>
+      <ul class="cat-tiles reveal">
+        {
+          categories.map((c, i) => (
+            <li class:list={{ wide: i === 0 }}>
+              <a href={href(lang, `categories/${c.slug}/`)}>
+                <ProductImage category={c.slug} label="" alt="" seed={`cat-${c.slug}`} />
+                <span class="cat-tiles__label">
+                  <span class="cat-tiles__en">{c.en}</span>
+                  <span class="cat-tiles__local">{c.name[lang]}（{countBy('category', c.slug)}）</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-head reveal">
+      <h2>{t('home.brands')}<span class="sub">{t('home.brandsSub')}</span></h2>
+      <a href={href(lang, 'brands/')} class="link-arrow">{t('home.viewAll')}</a>
+    </div>
+    <ul class="brand-wall reveal">
+      {
+        brands.map((b) => (
+          <li>
+            <a href={href(lang, `brands/${b.slug}/`)}>
+              <span class="brand-wall__name">{b.name}</span>
+              <span class="brand-wall__sub">{lang === 'ja' ? b.kana : b.origin[lang]} · {countBy('brand', b.slug)}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="promise">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>{t('home.promise')}<span class="sub">{t('home.promiseSub')}</span></h2>
+      </div>
+      <ol class="promise__list">
+        {
+          ([1, 2, 3] as const).map((n) => (
+            <li class="reveal">
+              <span class="promise__num">0{n}</span>
+              <h3>{t(`promise.${n}.title`)}</h3>
+              <p>{t(`promise.${n}.body`)}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-head reveal">
+      <h2>{t('home.instagram')}<span class="sub">{t('home.instagramSub')}</span></h2>
+      <a href={site.instagram} class="link-arrow" target="_blank" rel="noopener">{site.instagramHandle}</a>
+    </div>
+    <div class="reveal"><InstagramGrid lang={lang} /></div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    background: radial-gradient(120% 90% at 80% 20%, #2a241b 0%, var(--night) 60%);
+    color: #f3eee4;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), rgba(205, 180, 137, 0.07) calc(25% - 1px) 25%);
+    pointer-events: none;
+  }
+  .hero__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    gap: 48px;
+    min-height: min(calc(100svh - var(--header-h) - 36px - 64px), 760px);
+    padding-block: 72px 48px;
+  }
+  .hero__title {
+    margin-top: 28px;
+    font-size: clamp(30px, 4.4vw, 54px);
+    line-height: 1.55;
+    letter-spacing: 0.12em;
+  }
+  :global(html[lang='en']) .hero__title {
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+    font-size: clamp(38px, 5.4vw, 68px);
+  }
+  .hero__title span {
+    display: block;
+  }
+  .hero__lead {
+    margin-top: 28px;
+    max-width: 30em;
+    color: #b9b1a2;
+    font-size: 14px;
+    line-height: 2.1;
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 28px;
+    margin-top: 44px;
+  }
+  .hero__link {
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    color: var(--gold-soft);
+  }
+  .hero__link:hover {
+    color: #fff;
+  }
+  .hero__visual {
+    position: relative;
+    height: min(560px, 60vw);
+  }
+  .arch {
+    position: absolute;
+    overflow: hidden;
+    border-radius: 999px 999px 0 0;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
+  }
+  .arch :global(.pimg) {
+    aspect-ratio: auto;
+    height: 100%;
+  }
+  .arch--front {
+    left: 8%;
+    bottom: 0;
+    width: 52%;
+    height: 88%;
+    z-index: 2;
+    outline: 1px solid rgba(205, 180, 137, 0.5);
+    outline-offset: 10px;
+  }
+  .arch--back {
+    right: 4%;
+    top: 0;
+    width: 40%;
+    height: 66%;
+    opacity: 0.85;
+  }
+  .hero__mark {
+    position: absolute;
+    right: 4%;
+    bottom: 6px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    color: var(--gold-soft);
+    writing-mode: vertical-rl;
+  }
+  .hero__cats {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px 24px;
+    list-style: none;
+    margin-top: 0;
+    padding-block: 22px;
+    border-top: 1px solid rgba(205, 180, 137, 0.2);
+  }
+  .hero__cats a {
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #b9b1a2;
+  }
+  .hero__cats a:hover {
+    color: var(--gold-soft);
+  }
+  @media (max-width: 860px) {
+    .hero__inner {
+      grid-template-columns: 1fr;
+      padding-top: 56px;
+      min-height: 0;
+    }
+    .hero__visual {
+      height: 88vw;
+      max-height: 480px;
+      order: -1;
+    }
+    .hero__cats {
+      justify-content: flex-start;
+    }
+    .hero__mark {
+      display: none;
+    }
+  }
+
+  .cats-section {
+    background: var(--paper);
+    border-block: 1px solid var(--line);
+  }
+  .cat-tiles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(8px, 1.4vw, 16px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 900px) {
+    .cat-tiles {
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 1fr;
+    }
+    .cat-tiles .wide {
+      grid-row: span 2;
+    }
+    .cat-tiles .wide :global(.pimg) {
+      aspect-ratio: auto;
+      height: 100%;
+    }
+  }
+  .cat-tiles .wide {
+    grid-column: span 2;
+  }
+  @media (min-width: 900px) {
+    .cat-tiles .wide {
+      grid-column: span 2;
+    }
+  }
+  .cat-tiles a {
+    position: relative;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+  }
+  .cat-tiles :global(.pimg) {
+    aspect-ratio: 4 / 3;
+  }
+  .cat-tiles a:hover :global(.pimg svg) {
+    transform: scale(1.05);
+  }
+  .cat-tiles__label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 56px 20px 18px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(rgba(22, 20, 15, 0), rgba(22, 20, 15, 0.42));
+    color: #fff;
+  }
+  .cat-tiles__en {
+    font-family: var(--font-display);
+    font-size: clamp(18px, 2.4vw, 28px);
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+  }
+  .cat-tiles__local {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    opacity: 0.9;
+  }
+
+  .brand-wall {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  @media (min-width: 700px) {
+    .brand-wall {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .brand-wall {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .brand-wall li {
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand-wall a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 120px;
+    padding: 20px 12px;
+    text-align: center;
+    transition: background 0.35s var(--ease);
+  }
+  .brand-wall a:hover {
+    background: var(--paper);
+  }
+  .brand-wall__name {
+    font-family: var(--font-display);
+    font-size: clamp(17px, 1.8vw, 22px);
+    letter-spacing: 0.16em;
+    line-height: 1.3;
+  }
+  .brand-wall__sub {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .promise {
+    background: var(--night);
+    color: #e9e3d7;
+    padding-block: clamp(72px, 10vw, 128px);
+  }
+  .promise .section-head .sub {
+    color: #8f887b;
+  }
+  .promise__list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(24px, 4vw, 64px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (max-width: 800px) {
+    .promise__list {
+      grid-template-columns: 1fr;
+    }
+  }
+  .promise__list li {
+    border-top: 1px solid rgba(205, 180, 137, 0.35);
+    padding-top: 28px;
+  }
+  .promise__num {
+    font-family: var(--font-display);
+    font-size: 40px;
+    color: var(--gold-soft);
+    line-height: 1;
+  }
+  .promise__list h3 {
+    margin-top: 20px;
+    font-size: 19px;
+    letter-spacing: 0.1em;
+  }
+  .promise__list p {
+    margin-top: 14px;
+    color: #a9a294;
+    font-size: 13.5px;
+  }
+</style>

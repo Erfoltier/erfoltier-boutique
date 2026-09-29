@@ -1,0 +1,29 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHead from '../../../components/PageHead.astro';
+import ProductListing from '../../../components/ProductListing.astro';
+import { categories, products, type Category } from '../../../data/catalog';
+import { type Lang, langs, useTranslations } from '../../../i18n/ui';
+
+export function getStaticPaths() {
+  return langs.flatMap((lang) => categories.map((category) => ({ params: { lang, slug: category.slug }, props: { category } })));
+}
+
+const lang = Astro.params.lang as Lang;
+const { category } = Astro.props as { category: Category };
+const t = useTranslations(lang);
+const items = products.filter((p) => p.category === category.slug);
+---
+
+<Base lang={lang} title={category.name[lang]} path={`categories/${category.slug}/`}>
+  <div class="container">
+    <PageHead
+      lang={lang}
+      eyebrow={category.en}
+      title={category.name[lang]}
+      lead={category.description[lang]}
+      crumbs={[{ label: t('categories.title'), path: 'categories/' }, { label: category.name[lang] }]}
+    />
+    <ProductListing lang={lang} items={items} showCategory={false} />
+  </div>
+</Base>

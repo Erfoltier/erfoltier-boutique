@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import InstagramGrid from '../../components/InstagramGrid.astro';
+import { site } from '../../data/site';
+import { type Lang, langPaths, useTranslations } from '../../i18n/ui';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+---
+
+<Base lang={lang} title="Instagram" path="instagram/">
+  <div class="container">
+    <PageHead lang={lang} eyebrow={site.instagramHandle} title="Instagram" lead={t('home.instagramSub')} crumbs={[{ label: 'Instagram' }]}>
+      <a href={site.instagram} class="btn follow" target="_blank" rel="noopener">{t('insta.follow')}</a>
+    </PageHead>
+    <InstagramGrid lang={lang} count={12} />
+  </div>
+</Base>
+
+<style>
+  .follow {
+    margin-top: 28px;
+  }
+</style>
