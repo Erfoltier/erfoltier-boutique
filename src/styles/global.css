@@ -1,16 +1,18 @@
 :root {
   /* グレージュ基調 */
-  --ivory: #eeeae4;
-  --paper: #f7f5f1;
-  --greige: #d9d2c8;
-  --greige-deep: #c8bfb2;
-  --ink: #2b2824;
-  --ink-2: #4b463f;
-  --muted: #847b70;
-  --line: #dbd4c9;
-  --gold: #968267;
-  --gold-soft: #c8b8a0;
-  --night: #3b3732;
+  --ivory: #f6f4f1;
+  --paper: #fcfbf9;
+  --greige: #ebe7e1;
+  --greige-deep: #ddd7cf;
+  --ink: #3b3733;
+  --ink-2: #5f5952;
+  --muted: #968d82;
+  --line: rgba(120, 108, 94, 0.16);
+  --gold: #a8977f;
+  --gold-soft: #cfc4b4;
+  --night: #e9e5df;
+  --glass: rgba(255, 255, 255, 0.52);
+  --glass-line: rgba(255, 255, 255, 0.75);
   --danger: #9a3b2f;
 
   --font-display: 'Cormorant Garamond', 'Noto Serif JP', 'Noto Serif KR', serif;
@@ -49,6 +51,8 @@ body {
   background: var(--ivory);
   color: var(--ink);
   font-family: var(--font-sans);
+  background-image: radial-gradient(1200px 600px at 100% 0%, rgba(255, 255, 255, 0.7), transparent 60%);
+  background-attachment: fixed;
   font-size: 15px;
   font-weight: 400;
   line-height: 1.9;
@@ -236,13 +240,13 @@ p {
   color: var(--paper);
 }
 .btn--light {
-  border-color: var(--gold-soft);
+  border-color: var(--ink);
   background: transparent;
-  color: var(--paper);
+  color: var(--ink);
 }
 .btn--light:hover {
-  background: var(--gold-soft);
-  color: var(--night);
+  background: var(--ink);
+  color: var(--paper);
 }
 .btn--block {
   width: 100%;
