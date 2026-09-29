@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import { legal } from '../../data/site';
+import { type Lang, langPaths } from '../../i18n/ui';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const { title, rows } = legal[lang];
+---
+
+<Base lang={lang} title={title} path="legal/">
+  <div class="container narrow">
+    <PageHead lang={lang} eyebrow="Legal" title={title} crumbs={[{ label: title }]} />
+    <dl class="legal">
+      {
+        rows.map(([k, v]) => (
+          <div>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</Base>
+
+<style>
+  .narrow {
+    max-width: 920px;
+  }
+  .legal {
+    margin: 0;
+    border-top: 1px solid var(--ink);
+    font-size: 14px;
+  }
+  .legal div {
+    display: grid;
+    grid-template-columns: 13em 1fr;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .legal dt {
+    color: var(--muted);
+  }
+  .legal dd {
+    margin: 0;
+  }
+  @media (max-width: 600px) {
+    .legal div {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+</style>

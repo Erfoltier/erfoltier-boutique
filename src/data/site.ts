@@ -15,6 +15,61 @@ export const site = {
   },
 } as const;
 
+/* 特定商取引法に基づく表記。〔 〕は実際の情報に差し替えてください。 */
+export const legal: Record<Lang, { title: string; rows: [string, string][] }> = {
+  ja: {
+    title: '特定商取引法に基づく表記',
+    rows: [
+      ['販売事業者', '〔会社名〕'],
+      ['運営統括責任者', '〔代表者名〕'],
+      ['所在地', '〒〔郵便番号〕 〔所在地〕'],
+      ['電話番号', '〔電話番号〕（受付時間 11:00〜19:00、水曜定休）'],
+      ['メールアドレス', 'contact@erfoltier.com'],
+      ['古物商許可', '〔都道府県〕公安委員会 第〔番号〕号'],
+      ['販売価格', '各商品ページに税込価格で表示しています。'],
+      ['商品代金以外の必要料金', '国内配送：送料無料。海外配送：配送先に応じた送料。海外発送の場合、関税・輸入消費税等の諸費用はお客様のご負担となります。銀行振込の場合、振込手数料はお客様のご負担となります。'],
+      ['お支払い方法', 'クレジットカード、銀行振込'],
+      ['お支払い時期', 'クレジットカード：ご注文時にお支払いが確定します。銀行振込：ご注文後〔7〕日以内にお振込みください。'],
+      ['商品の引渡し時期', 'クレジットカード：ご注文確定後、最短翌営業日に発送します。銀行振込：ご入金確認後、最短翌営業日に発送します。'],
+      ['返品・交換について', 'お客様のご都合による返品・交換はお受けしておりません。商品説明と異なる場合、不良品・誤配送の場合は、商品到着後7日以内にご連絡ください。返送料は当店負担にて、返金または交換にて対応いたします。'],
+    ],
+  },
+  en: {
+    title: 'Legal Notice (Act on Specified Commercial Transactions)',
+    rows: [
+      ['Seller', '[Company name]'],
+      ['Responsible person', '[Representative]'],
+      ['Address', '[Address], Japan'],
+      ['Phone', '[Phone number] (11:00–19:00 JST, closed Wednesdays)'],
+      ['Email', 'contact@erfoltier.com'],
+      ['Secondhand dealer license', '[Prefecture] Public Safety Commission No. [number]'],
+      ['Price', 'Shown on each product page, tax included.'],
+      ['Additional charges', 'Shipping within Japan is free. International orders are charged a shipping fee based on the destination; import duties, taxes and other charges are the customer’s responsibility. Bank transfer fees are paid by the customer.'],
+      ['Payment methods', 'Credit card, bank transfer'],
+      ['Payment timing', 'Credit card: charged when the order is placed. Bank transfer: please pay within [7] days of ordering.'],
+      ['Delivery', 'Ships as early as the next business day after the order (credit card) or payment confirmation (bank transfer).'],
+      ['Returns & exchanges', 'All sales are final; we do not accept returns or exchanges for change of mind. If an item is not as described, defective or sent in error, please contact us within 7 days of delivery. We will cover return shipping and offer a refund or exchange.'],
+    ],
+  },
+  ko: {
+    title: '특정상거래법에 따른 표기',
+    rows: [
+      ['판매 사업자', '[회사명]'],
+      ['운영 책임자', '[대표자명]'],
+      ['소재지', '[소재지], 일본'],
+      ['전화번호', '[전화번호] (일본 시간 11:00~19:00, 수요일 휴무)'],
+      ['이메일', 'contact@erfoltier.com'],
+      ['중고품 판매 허가', '[도도부현] 공안위원회 제[번호]호'],
+      ['판매 가격', '각 상품 페이지에 세금 포함 가격으로 표시합니다.'],
+      ['상품 대금 외 비용', '일본 국내 배송은 무료입니다. 해외 배송은 배송지에 따른 배송비가 부과되며, 관세·수입 부가세 등 제반 비용은 고객님 부담입니다. 계좌이체 수수료는 고객님 부담입니다.'],
+      ['결제 방법', '신용카드, 계좌이체'],
+      ['결제 시기', '신용카드: 주문 시 결제가 확정됩니다. 계좌이체: 주문 후 [7]일 이내에 입금해 주세요.'],
+      ['상품 인도 시기', '주문 확정(신용카드) 또는 입금 확인(계좌이체) 후 빠르면 다음 영업일에 발송합니다.'],
+      ['반품·교환', '단순 변심에 의한 반품·교환은 받지 않습니다. 상품 설명과 다르거나 불량·오배송인 경우 수령 후 7일 이내에 연락해 주세요. 반송비는 당사가 부담하며 환불 또는 교환해 드립니다.'],
+    ],
+  },
+};
+
 export interface FaqItem {
   q: string;
   a: string;
@@ -38,16 +93,16 @@ export const faq: Record<Lang, FaqGroup[]> = {
     {
       title: 'ご注文・お支払いについて',
       items: [
-        { q: '支払い方法は何がありますか？', a: 'クレジットカード（VISA / Mastercard / JCB / AMEX）、銀行振込、代金引換に対応予定です。' },
+        { q: '支払い方法は何がありますか？', a: 'クレジットカード（VISA / Mastercard / JCB / AMEX）と銀行振込に対応予定です。銀行振込の場合、ご入金の確認後に発送いたします。' },
         { q: '注文後のキャンセルはできますか？', a: '発送前であればキャンセルを承ります。お早めにお問い合わせフォームよりご連絡ください。' },
       ],
     },
     {
       title: '配送・返品について',
       items: [
-        { q: '送料はかかりますか？', a: '国内配送は全品送料無料です。平日14時までのご注文確定で、最短翌営業日に発送いたします。' },
-        { q: '海外への発送は可能ですか？', a: '韓国・アメリカなど一部の国・地域への発送に対応しています。送料と関税はお客様のご負担となります。' },
-        { q: '返品はできますか？', a: '商品到着後7日以内、未使用の状態であれば返品を承ります。記載のない不具合があった場合は、送料当店負担にて対応いたします。' },
+        { q: '送料はかかりますか？', a: '国内配送は全品送料無料です。平日14時までのご注文確定で、最短翌営業日に発送いたします。海外発送の場合は、配送先に応じた送料を別途頂戴します。' },
+        { q: '海外への発送は可能ですか？', a: '一部の国・地域への発送に対応予定です。海外発送の送料、関税・輸入消費税などの諸費用はお客様のご負担となります。' },
+        { q: '返品はできますか？', a: 'ご購入後の、お客様のご都合による返品・交換はお受けしておりません。商品説明と異なる場合、不良品・誤配送の場合は、商品到着後7日以内にご連絡ください。返送料は当店負担にて、返金または交換で対応いたします。' },
       ],
     },
   ],
@@ -64,16 +119,16 @@ export const faq: Record<Lang, FaqGroup[]> = {
     {
       title: 'Orders & payment',
       items: [
-        { q: 'Which payment methods do you accept?', a: 'We plan to accept major credit cards (VISA / Mastercard / JCB / AMEX) and bank transfer.' },
+        { q: 'Which payment methods do you accept?', a: 'We plan to accept major credit cards (VISA / Mastercard / JCB / AMEX) and bank transfer. Bank-transfer orders ship once payment is confirmed.' },
         { q: 'Can I cancel my order?', a: 'Orders can be cancelled any time before shipping. Please contact us as soon as possible.' },
       ],
     },
     {
       title: 'Shipping & returns',
       items: [
-        { q: 'Do you charge for shipping?', a: 'Shipping within Japan is free on every order. Orders confirmed by 2 pm JST on business days ship as early as the next business day.' },
-        { q: 'Do you ship internationally?', a: 'We ship to selected countries and regions, including Korea and the United States. International shipping fees and import duties are the customer’s responsibility.' },
-        { q: 'Can I return an item?', a: 'Unused items may be returned within 7 days of delivery. If an item has an undisclosed defect, we will cover return shipping.' },
+        { q: 'Do you charge for shipping?', a: 'Shipping within Japan is free on every order. Orders confirmed by 2 pm JST on business days ship as early as the next business day. International orders are charged a shipping fee based on the destination.' },
+        { q: 'Do you ship internationally?', a: 'We plan to ship to selected countries and regions. International shipping fees, import duties, taxes and any other charges are the customer’s responsibility.' },
+        { q: 'Can I return an item?', a: 'All sales are final, and we do not accept returns or exchanges for change of mind. If an item is not as described, defective or sent in error, please contact us within 7 days of delivery — we will cover return shipping and offer a refund or exchange.' },
       ],
     },
   ],
@@ -90,16 +145,16 @@ export const faq: Record<Lang, FaqGroup[]> = {
     {
       title: '주문·결제 안내',
       items: [
-        { q: '결제 방법은 무엇이 있나요?', a: '신용카드(VISA / Mastercard / JCB / AMEX)와 계좌이체를 지원할 예정입니다.' },
+        { q: '결제 방법은 무엇이 있나요?', a: '신용카드(VISA / Mastercard / JCB / AMEX)와 계좌이체를 지원할 예정입니다. 계좌이체의 경우 입금 확인 후 발송합니다.' },
         { q: '주문 후 취소할 수 있나요?', a: '발송 전이라면 취소가 가능합니다. 가능한 한 빨리 문의 양식으로 연락해 주세요.' },
       ],
     },
     {
       title: '배송·반품 안내',
       items: [
-        { q: '해외 배송이 가능한가요?', a: '한국, 미국 등 일부 국가·지역으로 배송이 가능합니다. 해외 배송비와 관세는 고객님 부담입니다.' },
+        { q: '해외 배송이 가능한가요?', a: '일부 국가·지역으로 배송할 예정입니다. 해외 배송비와 관세·수입 부가세 등 제반 비용은 고객님 부담입니다.' },
         { q: '배송 기간은 얼마나 걸리나요?', a: '일본 시간 기준 평일 오후 2시까지 주문이 확정되면 빠르면 다음 영업일에 발송합니다. 한국까지는 보통 발송 후 3~5일 정도 소요됩니다.' },
-        { q: '반품할 수 있나요?', a: '상품 수령 후 7일 이내, 미사용 상태라면 반품이 가능합니다. 기재되지 않은 하자가 있는 경우 반품 배송비는 당사가 부담합니다.' },
+        { q: '반품할 수 있나요?', a: '구매 후 단순 변심에 의한 반품·교환은 받지 않습니다. 상품 설명과 다르거나 불량·오배송인 경우 상품 수령 후 7일 이내에 연락해 주세요. 반송비는 당사가 부담하며 환불 또는 교환해 드립니다.' },
       ],
     },
   ],
