@@ -33,6 +33,11 @@ const countLabel = t('products.count', { n: '{n}' });
         </div>
       )
     }
+    <div class="chips chips--type" role="group" aria-label={t('type.filter')}>
+      <button type="button" class="chip" data-filter-type="" aria-pressed="true">{t('filter.all')}</button>
+      <button type="button" class="chip" data-filter-type="new" aria-pressed="false">{t('type.new')}</button>
+      <button type="button" class="chip" data-filter-type="used" aria-pressed="false">{t('type.used')}</button>
+    </div>
     <div class="toolbar__right">
       <p class="toolbar__count" aria-live="polite" data-count>{t('products.count', { n: items.length })}</p>
       {
@@ -68,6 +73,7 @@ const countLabel = t('products.count', { n: '{n}' });
     const grid = root.querySelector<HTMLElement>('[data-grid]')!;
     const cards = [...grid.querySelectorAll<HTMLElement>('[data-product]')];
     const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-filter-cat]')];
+    const typeChips = [...root.querySelectorAll<HTMLButtonElement>('[data-filter-type]')];
     const brandSel = root.querySelector<HTMLSelectElement>('[data-filter-brand]');
     const sortSel = root.querySelector<HTMLSelectElement>('[data-sort]')!;
     const countEl = root.querySelector<HTMLElement>('[data-count]')!;
@@ -76,6 +82,7 @@ const countLabel = t('products.count', { n: '{n}' });
 
     const params = new URLSearchParams(location.search);
     let cat = params.get('category') ?? '';
+    let type = params.get('type') ?? '';
     if (brandSel) brandSel.value = params.get('brand') ?? '';
     sortSel.value = params.get('sort') ?? 'new';
     if (!sortSel.value) sortSel.value = 'new';
@@ -84,6 +91,7 @@ const countLabel = t('products.count', { n: '{n}' });
       const brand = brandSel?.value ?? '';
       const sort = sortSel.value;
       chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filterCat === cat)));
+      typeChips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filterType === type)));
 
       const sorted = [...cards].sort((a, b) => {
         if (sort === 'priceAsc') return Number(a.dataset.price) - Number(b.dataset.price);
@@ -92,7 +100,8 @@ const countLabel = t('products.count', { n: '{n}' });
       });
       let visible = 0;
       for (const card of sorted) {
-        const show = (!cat || card.dataset.category === cat) && (!brand || card.dataset.brand === brand);
+        const show =
+          (!cat || card.dataset.category === cat) && (!brand || card.dataset.brand === brand) && (!type || card.dataset.type === type);
         card.hidden = !show;
         if (show) visible++;
         grid.appendChild(card);
@@ -102,6 +111,7 @@ const countLabel = t('products.count', { n: '{n}' });
 
       const q = new URLSearchParams();
       if (cat) q.set('category', cat);
+      if (type) q.set('type', type);
       if (brand) q.set('brand', brand);
       if (sort !== 'new') q.set('sort', sort);
       const qs = q.toString();
@@ -111,6 +121,12 @@ const countLabel = t('products.count', { n: '{n}' });
     chips.forEach((c) =>
       c.addEventListener('click', () => {
         cat = c.dataset.filterCat ?? '';
+        apply();
+      }),
+    );
+    typeChips.forEach((c) =>
+      c.addEventListener('click', () => {
+        type = c.dataset.filterType ?? '';
         apply();
       }),
     );
@@ -128,6 +144,14 @@ const countLabel = t('products.count', { n: '{n}' });
     justify-content: space-between;
     gap: 16px 24px;
     margin-bottom: clamp(28px, 4vw, 44px);
+  }
+  .chips--type {
+    padding-left: 16px;
+    border-left: 1px solid var(--line);
+  }
+  .chips--type:first-child {
+    padding-left: 0;
+    border-left: 0;
   }
   .chips {
     display: flex;

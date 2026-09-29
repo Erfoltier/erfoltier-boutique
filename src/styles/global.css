@@ -1,13 +1,16 @@
 :root {
-  --ivory: #f8f5ef;
-  --paper: #fffdf9;
-  --ink: #16140f;
-  --ink-2: #3a362e;
-  --muted: #7a7366;
-  --line: #e6dfd2;
-  --gold: #a8844a;
-  --gold-soft: #cdb489;
-  --night: #0f0e0c;
+  /* グレージュ基調 */
+  --ivory: #eeeae4;
+  --paper: #f7f5f1;
+  --greige: #d9d2c8;
+  --greige-deep: #c8bfb2;
+  --ink: #2b2824;
+  --ink-2: #4b463f;
+  --muted: #847b70;
+  --line: #dbd4c9;
+  --gold: #968267;
+  --gold-soft: #c8b8a0;
+  --night: #3b3732;
   --danger: #9a3b2f;
 
   --font-display: 'Cormorant Garamond', 'Noto Serif JP', 'Noto Serif KR', serif;
@@ -298,6 +301,20 @@ p {
   font-family: var(--font-display);
   font-size: 13px;
   letter-spacing: 0.08em;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tag-new {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
   line-height: 1;
   white-space: nowrap;
   flex-shrink: 0;

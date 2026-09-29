@@ -45,7 +45,7 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={desc} />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#0f0e0c" />
+    <meta name="theme-color" content="#3b3732" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {langs.map((l) => <link rel="alternate" hreflang={htmlLang[l]} href={new URL(href(l, path), Astro.site)} />)}
     <link rel="alternate" hreflang="x-default" href={new URL(href('ja', path), Astro.site)} />
@@ -479,7 +479,7 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
   .footer {
     margin-top: clamp(80px, 10vw, 140px);
     background: var(--night);
-    color: #cfc8ba;
+    color: #e3ddd3;
     font-size: 13px;
   }
   .footer__grid {
@@ -503,7 +503,7 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
   }
   .footer__brand p {
     margin-top: 24px;
-    color: #9d9587;
+    color: #b8afa1;
   }
   .footer__insta {
     display: inline-block;
@@ -520,9 +520,9 @@ const isActive = (p: string) => current.startsWith(href(lang, p));
     margin-bottom: 16px;
   }
   .footer__bottom {
-    border-top: 1px solid #2a2722;
+    border-top: 1px solid #4d4842;
     padding-block: 24px;
-    color: #7d766a;
+    color: #a39a8c;
     letter-spacing: 0.1em;
   }
   @media (max-width: 800px) {

@@ -6,7 +6,7 @@ import type { Localized } from '../i18n/ui';
  * プレースホルダーの代わりに写真が表示されます。
  */
 
-export type CategorySlug = 'apparel' | 'leather' | 'fabric' | 'watches' | 'accessories';
+export type CategorySlug = 'apparel' | 'leather' | 'fabric' | 'watches' | 'accessories' | 'other';
 export type Condition = 'N' | 'S' | 'A' | 'AB' | 'B';
 
 export interface Category {
@@ -91,6 +91,16 @@ export const categories: Category[] = [
       ko: '반지, 목걸이, 팔찌. 스타일을 한층 높여 주는 주얼리.',
     },
   },
+  {
+    slug: 'other',
+    en: 'Others',
+    name: { ja: 'その他', en: 'Others', ko: '기타' },
+    description: {
+      ja: 'サングラス、バッグチャーム、ステーショナリーなど、上質な小物たち。',
+      en: 'Sunglasses, bag charms, stationery and other fine objects.',
+      ko: '선글라스, 백 참, 문구 등 고급 소품.',
+    },
+  },
 ];
 
 export const brands: Brand[] = [
@@ -168,7 +178,7 @@ export const products: Product[] = [
     arrived: '2026-09-19',
   },
   {
-    id: 'EF-24008', brand: 'bottega-veneta', category: 'leather', price: 128_000, condition: 'S',
+    id: 'EF-24008', brand: 'bottega-veneta', category: 'leather', price: 128_000, condition: 'N',
     name: L('イントレチャート 二つ折り財布', 'Intrecciato Bi-fold Wallet', '인트레치아토 반지갑'),
     material: L('ナッパレザー', 'Nappa leather', '나파 레더'), color: L('ダークグリーン', 'Dark green', '다크 그린'),
     size: 'W11 × H9.5 cm', accessories: L('保存袋、箱', 'Dust bag, box', '더스트백, 박스'),
@@ -184,7 +194,7 @@ export const products: Product[] = [
     arrived: '2026-09-17',
   },
   {
-    id: 'EF-24010', brand: 'tiffany', category: 'accessories', price: 86_000, condition: 'S',
+    id: 'EF-24010', brand: 'tiffany', category: 'accessories', price: 86_000, condition: 'N',
     name: L('スマイル ペンダント ネックレス', 'Smile Pendant Necklace', '스마일 펜던트 목걸이'),
     material: L('K18 ローズゴールド', '18K rose gold', '18K 로즈 골드'), color: L('ローズゴールド', 'Rose gold', '로즈 골드'),
     size: 'Chain 41 cm', accessories: L('保存袋、箱', 'Pouch, box', '파우치, 박스'),
@@ -248,6 +258,22 @@ export const products: Product[] = [
     arrived: '2026-08-30',
   },
   {
+    id: 'EF-24019', brand: 'chanel', category: 'other', price: 62_000, condition: 'S',
+    name: L('ココマーク サングラス', 'CC Logo Sunglasses', 'CC 로고 선글라스'),
+    material: L('アセテート', 'Acetate', '아세테이트'), color: L('ブラック', 'Black', '블랙'),
+    size: '54□17 140', accessories: L('ケース、クロス', 'Case, cloth', '케이스, 클로스'),
+    description: L('テンプルのココマークが上品に映える、ボリュームのあるフレーム。', 'A bold frame finished with the CC logo on the temples.', '템플의 CC 로고가 고급스럽게 돋보이는 볼륨감 있는 프레임.'),
+    arrived: '2026-09-21',
+  },
+  {
+    id: 'EF-24020', brand: 'louis-vuitton', category: 'other', price: 74_000, condition: 'N',
+    name: L('バッグチャーム・キーホルダー', 'Bag Charm & Key Holder', '백 참·키홀더'),
+    material: L('メタル', 'Metal', '메탈'), color: L('ゴールド', 'Gold', '골드'),
+    size: 'H11 cm', accessories: L('保存袋、箱', 'Pouch, box', '파우치, 박스'),
+    description: L('バッグに華やかさを添える、モノグラム・フラワーのチャーム。', 'Monogram Flower charm to add a touch of polish to any bag.', '가방에 화사함을 더해 주는 모노그램 플라워 참.'),
+    arrived: '2026-09-16',
+  },
+  {
     id: 'EF-24018', brand: 'gucci', category: 'leather', price: 168_000, condition: 'A',
     name: L('ホースビット 1955 ショルダーバッグ', 'Horsebit 1955 Shoulder Bag', '홀스빗 1955 숄더백'),
     material: L('GGスプリーム・キャンバス、レザー', 'GG Supreme canvas, leather', 'GG 수프림 캔버스, 레더'), color: L('ベージュ／エボニー', 'Beige/Ebony', '베이지/에보니'),
@@ -259,4 +285,5 @@ export const products: Product[] = [
 
 export const getBrand = (slug: string) => brands.find((b) => b.slug === slug)!;
 export const getCategory = (slug: string) => categories.find((c) => c.slug === slug)!;
+export const isNew = (p: Product) => p.condition === 'N';
 export const byNewest = (a: Product, b: Product) => b.arrived.localeCompare(a.arrived);

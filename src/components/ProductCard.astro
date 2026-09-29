@@ -1,6 +1,6 @@
 ---
 import type { Product } from '../data/catalog';
-import { getBrand } from '../data/catalog';
+import { getBrand, isNew } from '../data/catalog';
 import { type Lang, type UIKey, formatPrice, href, useTranslations } from '../i18n/ui';
 import ProductImage from './ProductImage.astro';
 
@@ -20,6 +20,7 @@ const brand = getBrand(p.brand);
   data-brand={p.brand}
   data-category={p.category}
   data-price={p.price}
+  data-type={isNew(p) ? 'new' : 'used'}
   data-arrived={p.arrived}
 >
   <a href={href(lang, `products/${p.id.toLowerCase()}/`)} class="card__link">
@@ -32,7 +33,13 @@ const brand = getBrand(p.brand);
       <h3 class="card__name">{p.name[lang]}</h3>
       <div class="card__meta">
         <span class="card__price">{formatPrice(p.price, lang)}<small>{t('product.taxIncluded')}</small></span>
-        <span class="rank" title={t(`condition.${p.condition}` as UIKey)}>{p.condition}</span>
+        {
+          isNew(p) ? (
+            <span class="tag-new">{t('type.new')}</span>
+          ) : (
+            <span class="rank" title={`${t('type.used')}：${t(`condition.${p.condition}` as UIKey)}`}>{p.condition}</span>
+          )
+        }
       </div>
     </div>
   </a>

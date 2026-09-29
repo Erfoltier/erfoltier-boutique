@@ -2,7 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import ProductImage from '../../../components/ProductImage.astro';
 import ProductCard from '../../../components/ProductCard.astro';
-import { products, getBrand, getCategory, type Product } from '../../../data/catalog';
+import { products, getBrand, getCategory, isNew, type Product } from '../../../data/catalog';
 import { type Lang, type UIKey, langs, href, formatPrice, useTranslations } from '../../../i18n/ui';
 
 export function getStaticPaths() {
@@ -45,7 +45,10 @@ const grades = ['N', 'S', 'A', 'AB', 'B'] as const;
       </div>
 
       <div class="pdp__info">
-        <a href={href(lang, `brands/${brand.slug}/`)} class="pdp__brand">{brand.name}</a>
+        <div class="pdp__top">
+          <a href={href(lang, `brands/${brand.slug}/`)} class="pdp__brand">{brand.name}</a>
+          {isNew(p) ? <span class="tag-new">{t('type.new')}</span> : <span class="pdp__used">{t('type.used')}</span>}
+        </div>
         <h1 class="pdp__name">{p.name[lang]}</h1>
         <p class="pdp__price">
           {formatPrice(p.price, lang)}<small>（{t('product.taxIncluded')}）</small>
@@ -156,6 +159,21 @@ const grades = ['N', 'S', 'A', 'AB', 'B'] as const;
       position: static;
       margin-inline: calc(var(--gutter) * -1);
     }
+  }
+  .pdp__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .pdp__used {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border: 1px solid var(--ink);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
   }
   .pdp__brand {
     font-family: var(--font-display);

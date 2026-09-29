@@ -29,6 +29,7 @@ export const faq: Record<Lang, FaqGroup[]> = {
     {
       title: '商品について',
       items: [
+        { q: '新品と中古品の両方を扱っていますか？', a: 'はい。新品（未使用品）と中古品の両方を取り扱っております。商品一覧では「新品」「中古」で絞り込みができ、各商品ページにも区分を明記しています。' },
         { q: '取り扱い商品はすべて本物ですか？', a: 'はい。すべての商品は専任鑑定士による真贋鑑定を経て販売しております。万が一、正規品でないと判明した場合は、商品代金・送料を含めて全額返金いたします。' },
         { q: 'コンディションランクの基準を教えてください。', a: 'N（新品・未使用品）、S（未使用に近い極めて良好な状態）、A（使用感が少なく状態の良いもの）、AB（多少の使用感はあるが比較的良好なもの）、B（使用感・スレ等があるもの）の5段階で表記しています。各商品ページには状態の詳細も記載しております。' },
         { q: '実物を見ることはできますか？', a: 'ご来店での確認をご希望の場合は、事前にお問い合わせフォームよりご予約ください。追加のお写真のご依頼も承ります。' },
@@ -54,6 +55,7 @@ export const faq: Record<Lang, FaqGroup[]> = {
     {
       title: 'About our items',
       items: [
+        { q: 'Do you sell both new and pre-owned items?', a: 'Yes. We carry both brand-new (unused) and pre-owned pieces. You can filter by “New” or “Pre-owned” on the product list, and every product page states which it is.' },
         { q: 'Are all items authentic?', a: 'Yes. Every item is authenticated by our in-house specialists before it is listed. If an item is ever found not to be genuine, we will refund the full amount including shipping.' },
         { q: 'How do your condition grades work?', a: 'We use five grades: N (new/unused), S (near-mint), A (excellent, light signs of use), AB (very good, some signs of use) and B (good, visible wear). Each product page includes detailed condition notes.' },
         { q: 'Can I see an item in person?', a: 'Viewings are by appointment — please book through the contact form. We are also happy to send additional photos.' },
@@ -79,6 +81,7 @@ export const faq: Record<Lang, FaqGroup[]> = {
     {
       title: '상품 안내',
       items: [
+        { q: '새 상품과 중고 상품을 모두 판매하나요?', a: '네. 새 상품(미사용)과 중고 상품을 모두 취급합니다. 전체 상품 페이지에서 ‘새 상품’, ‘중고’로 필터링할 수 있으며, 각 상품 페이지에도 구분을 명시하고 있습니다.' },
         { q: '모든 상품이 정품인가요?', a: '네. 모든 상품은 전문 감정사의 진품 감정을 거쳐 판매됩니다. 만일 정품이 아닌 것으로 판명될 경우, 상품 대금과 배송비를 포함해 전액 환불해 드립니다.' },
         { q: '컨디션 등급 기준을 알려 주세요.', a: 'N(새 상품·미사용), S(미사용에 가까운 매우 좋은 상태), A(사용감이 적고 상태가 좋은 상품), AB(약간의 사용감은 있으나 비교적 양호한 상품), B(사용감·스크래치 등이 있는 상품)의 5단계로 표기합니다. 각 상품 페이지에 상세한 상태 설명이 있습니다.' },
         { q: '실물을 볼 수 있나요?', a: '매장 방문을 원하시면 문의 양식으로 사전 예약해 주세요. 추가 사진 요청도 가능합니다.' },

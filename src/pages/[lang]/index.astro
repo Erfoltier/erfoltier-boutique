@@ -26,8 +26,11 @@ const titleLines = t('hero.title').split('\n');
         </h1>
         <p class="hero__lead">{t('hero.lead')}</p>
         <div class="hero__cta">
-          <a href={href(lang, 'products/')} class="btn btn--light">{t('hero.cta')}</a>
-          <a href={href(lang, 'brands/')} class="hero__link">{t('hero.cta2')} →</a>
+          <a href={href(lang, 'products/')} class="btn">{t('hero.cta')}</a>
+          <span class="hero__links">
+            <a href={`${href(lang, 'products/')}?type=new`} class="hero__link">{t('hero.ctaNew')} →</a>
+            <a href={`${href(lang, 'products/')}?type=used`} class="hero__link">{t('hero.ctaUsed')} →</a>
+          </span>
         </div>
       </div>
       <div class="hero__visual" aria-hidden="true">
@@ -63,8 +66,8 @@ const titleLines = t('hero.title').split('\n');
       </div>
       <ul class="cat-tiles reveal">
         {
-          categories.map((c, i) => (
-            <li class:list={{ wide: i === 0 }}>
+          categories.map((c) => (
+            <li>
               <a href={href(lang, `categories/${c.slug}/`)}>
                 <ProductImage category={c.slug} label="" alt="" seed={`cat-${c.slug}`} />
                 <span class="cat-tiles__label">
@@ -129,15 +132,15 @@ const titleLines = t('hero.title').split('\n');
 <style>
   .hero {
     position: relative;
-    background: radial-gradient(120% 90% at 80% 20%, #2a241b 0%, var(--night) 60%);
-    color: #f3eee4;
+    background: radial-gradient(120% 90% at 80% 15%, #e6e0d7 0%, var(--greige) 55%, var(--greige-deep) 100%);
+    color: var(--ink);
     overflow: hidden;
   }
   .hero::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), rgba(205, 180, 137, 0.07) calc(25% - 1px) 25%);
+    background: repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), rgba(59, 55, 50, 0.07) calc(25% - 1px) 25%);
     pointer-events: none;
   }
   .hero__inner {
@@ -167,7 +170,7 @@ const titleLines = t('hero.title').split('\n');
   .hero__lead {
     margin-top: 28px;
     max-width: 30em;
-    color: #b9b1a2;
+    color: var(--ink-2);
     font-size: 14px;
     line-height: 2.1;
   }
@@ -178,13 +181,20 @@ const titleLines = t('hero.title').split('\n');
     gap: 28px;
     margin-top: 44px;
   }
+  .hero__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+  }
   .hero__link {
     font-size: 13px;
     letter-spacing: 0.16em;
-    color: var(--gold-soft);
+    color: var(--ink);
+    border-bottom: 1px solid rgba(43, 40, 36, 0.35);
+    padding-bottom: 3px;
   }
   .hero__link:hover {
-    color: #fff;
+    border-bottom-color: var(--ink);
   }
   .hero__visual {
     position: relative;
@@ -194,7 +204,7 @@ const titleLines = t('hero.title').split('\n');
     position: absolute;
     overflow: hidden;
     border-radius: 999px 999px 0 0;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 30px 60px rgba(59, 55, 50, 0.18);
   }
   .arch :global(.pimg) {
     aspect-ratio: auto;
@@ -206,7 +216,7 @@ const titleLines = t('hero.title').split('\n');
     width: 52%;
     height: 88%;
     z-index: 2;
-    outline: 1px solid rgba(205, 180, 137, 0.5);
+    outline: 1px solid rgba(59, 55, 50, 0.3);
     outline-offset: 10px;
   }
   .arch--back {
@@ -223,7 +233,7 @@ const titleLines = t('hero.title').split('\n');
     font-family: var(--font-display);
     font-size: 13px;
     letter-spacing: 0.3em;
-    color: var(--gold-soft);
+    color: var(--muted);
     writing-mode: vertical-rl;
   }
   .hero__cats {
@@ -235,17 +245,17 @@ const titleLines = t('hero.title').split('\n');
     list-style: none;
     margin-top: 0;
     padding-block: 22px;
-    border-top: 1px solid rgba(205, 180, 137, 0.2);
+    border-top: 1px solid rgba(59, 55, 50, 0.15);
   }
   .hero__cats a {
     font-family: var(--font-display);
     font-size: 15px;
     letter-spacing: 0.24em;
     text-transform: uppercase;
-    color: #b9b1a2;
+    color: var(--ink-2);
   }
   .hero__cats a:hover {
-    color: var(--gold-soft);
+    color: var(--gold);
   }
   @media (max-width: 860px) {
     .hero__inner {
@@ -280,23 +290,7 @@ const titleLines = t('hero.title').split('\n');
   }
   @media (min-width: 900px) {
     .cat-tiles {
-      grid-template-columns: repeat(4, 1fr);
-      grid-auto-rows: 1fr;
-    }
-    .cat-tiles .wide {
-      grid-row: span 2;
-    }
-    .cat-tiles .wide :global(.pimg) {
-      aspect-ratio: auto;
-      height: 100%;
-    }
-  }
-  .cat-tiles .wide {
-    grid-column: span 2;
-  }
-  @media (min-width: 900px) {
-    .cat-tiles .wide {
-      grid-column: span 2;
+      grid-template-columns: repeat(3, 1fr);
     }
   }
   .cat-tiles a {

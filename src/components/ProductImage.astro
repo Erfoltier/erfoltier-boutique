@@ -14,11 +14,11 @@ const { category, label, image, alt, seed = label, eager = false } = Astro.props
 
 // 写真が未登録の間は、カテゴリーごとの線画で上品なプレースホルダーを描画する
 const tones = [
-  ['#efe9df', '#e2d8c7'],
-  ['#ece6e0', '#d9cfc4'],
-  ['#e9e6de', '#d5cfc0'],
-  ['#f1ece4', '#e0d3bf'],
-  ['#e8e3dc', '#d3c8ba'],
+  ['#ebe7e1', '#d9d2c8'],
+  ['#e8e4de', '#d3cbc0'],
+  ['#eeebe6', '#dcd6cd'],
+  ['#e6e1da', '#cfc6ba'],
+  ['#ece9e4', '#d6d0c7'],
 ];
 let h = 0;
 for (const c of seed) h = (h * 31 + c.charCodeAt(0)) >>> 0;
@@ -77,6 +77,16 @@ const gid = `g-${h.toString(36)}`;
               <path d="M318 248 C332 290 316 330 300 360 M82 248 C68 290 84 330 100 360" />
             </>
           )}
+          {category === 'other' && (
+            <>
+              <path d="M96 236 H304" />
+              <path d="M104 236 C100 290 122 312 156 312 C188 312 196 286 194 250 L192 236" />
+              <path d="M296 236 C300 290 278 312 244 312 C212 312 204 286 206 250 L208 236" />
+              <path d="M194 250 C198 244 202 244 206 250" />
+              <path d="M96 236 L76 212 M304 236 L324 212" />
+              <path d="M130 258 L150 250 M232 258 L252 250" opacity="0.5" />
+            </>
+          )}
           {category === 'apparel' && (
             <>
               <path d="M200 112 a10 10 0 1 1 10 10 v10" />
@@ -102,7 +112,7 @@ const gid = `g-${h.toString(36)}`;
     position: relative;
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    background: #efe9df;
+    background: #e8e4de;
   }
   .pimg :is(img, svg) {
     width: 100%;
