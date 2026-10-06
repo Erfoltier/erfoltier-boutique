@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>そのシワ、放置してて平気？！</title>
+<title>そのシワ、放置してて平気？！｜いしだ皮フ科・美容皮膚科</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
@@ -85,7 +85,7 @@
 
   #cta1 { top: 560px; font-size: 104px; font-weight: 700; color: #fff; line-height: 1.35; }
   #cta2 { top: 860px; font-size: 52px; color: #f3dcd3; font-weight: 500; }
-  #brand { top: 1040px; font-family: "Cormorant Garamond", serif; font-size: 110px; letter-spacing: .32em; color: var(--gold); font-weight: 600; padding-left: .32em; }
+  #brand { top: 1070px; font-family: "Noto Serif JP", serif; font-size: 70px; letter-spacing: .06em; color: var(--gold); font-weight: 700; padding-left: .06em; }
   #brandLine { top: 1190px; }
   #brandLine i { display: inline-block; height: 2px; background: var(--gold); }
   #btn {
@@ -93,7 +93,7 @@
     background: linear-gradient(90deg, #c0566b, #d9788a); color: #fff; font-size: 42px; font-weight: 700; white-space: nowrap;
     display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 40px rgba(192,86,107,.45);
   }
-  #mark { top: 120px; font-family: "Cormorant Garamond", serif; font-size: 40px; letter-spacing: .4em; color: var(--rose); padding-left: .4em; }
+  #mark { top: 120px; font-family: "Noto Serif JP", serif; font-size: 34px; font-weight: 700; letter-spacing: .2em; color: var(--rose); padding-left: .2em; }
   .spark { position: absolute; width: 60px; height: 60px; }
 </style>
 </head>
@@ -197,7 +197,7 @@
   <div class="abs hook serif" id="h3">平気？！</div>
 
   <!-- brand mark -->
-  <div class="abs" id="mark">ERFOLTIER</div>
+  <div class="abs" id="mark">いしだ皮フ科・美容皮膚科</div>
 
   <!-- S2 -->
   <div class="abs title serif" id="t2">気づけば、<span class="em">ここにも。</span></div>
@@ -227,7 +227,7 @@
   <!-- S6 -->
   <div class="abs serif" id="cta1">シワが“刻まれる”<br>その前に。</div>
   <div class="abs" id="cta2">気になり始めた今が、相談どき。</div>
-  <div class="abs" id="brand">ERFOLTIER</div>
+  <div class="abs" id="brand">いしだ皮フ科・美容皮膚科</div>
   <div class="abs" id="brandLine"><i id="bl"></i></div>
   <div id="btn">ご予約・ご相談はプロフィールのリンクから</div>
   <div class="abs disc light" id="d6" style="top:1500px">※自由診療。効果には個人差があります。主なリスク・副作用：内出血・腫れ・痛み、頭痛、まぶたの重さ等。詳しくはカウンセリングにてご説明します。</div>
@@ -433,7 +433,7 @@ function render(t) {
   { const a = show($('cta1'), t, 25.4, 30.5, { dur: .6, dy: 50 }); place($('cta1'), a); }
   { const a = show($('cta2'), t, 26.1, 30.5, { dur: .5 }); place($('cta2'), a); }
   { const a = show($('brand'), t, 26.7, 30.5, { dur: .7, dy: 0, scaleFrom: 1.1 }); place($('brand'), a); }
-  $('bl').style.width = (560 * easeInOut(seg(t, 26.9, 27.7))) + 'px';
+  $('bl').style.width = (700 * easeInOut(seg(t, 26.9, 27.7))) + 'px';
   $('brandLine').style.opacity = t > 26.9 ? 1 : 0;
   {
     const btn = $('btn');
