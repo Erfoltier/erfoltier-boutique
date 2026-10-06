@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>そのシワ、放置してて平気？！</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #f8f1ec;
+    --blush: #f1dcd3;
+    --ink: #2b2024;
+    --rose: #c0566b;
+    --alert: #ff5c77;
+    --gold: #c9a27a;
+    --plum: #2a1a20;
+    --line: #7d4f46;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #stage {
+    position: relative; width: 1080px; height: 1920px; overflow: hidden;
+    font-family: "Noto Sans JP", sans-serif; color: var(--ink);
+    background: var(--ivory);
+  }
+  .layer { position: absolute; inset: 0; }
+  .abs { position: absolute; left: 0; width: 1080px; text-align: center; will-change: transform, opacity; }
+  .serif { font-family: "Noto Serif JP", serif; }
+
+  #bgIvory { background: radial-gradient(120% 80% at 50% 35%, #fffaf6 0%, var(--ivory) 45%, var(--blush) 100%); }
+  #bgDark { background: radial-gradient(90% 60% at 50% 45%, #2a1c20 0%, #120c0e 70%, #070506 100%); }
+  #bgPlum { background: radial-gradient(110% 70% at 50% 40%, #4a2a35 0%, var(--plum) 55%, #140b0f 100%); }
+  #flash { background: #fff; }
+  #vignette { background: radial-gradient(70% 55% at 50% 45%, rgba(0,0,0,0) 40%, rgba(60,0,10,.55) 100%); }
+
+  #face { position: absolute; left: 0; top: 0; width: 600px; height: 700px; transform-origin: 0 0; }
+  #face svg { width: 600px; height: 700px; overflow: visible; }
+
+  /* hook */
+  .hook { color: #fff; font-weight: 900; letter-spacing: .02em; text-shadow: 0 6px 40px rgba(0,0,0,.6); }
+  #h1 { top: 560px; font-size: 150px; }
+  #h2 { top: 770px; font-size: 150px; }
+  #h3 { top: 980px; font-size: 240px; color: var(--alert); text-shadow: 0 0 60px rgba(255,60,90,.55), 0 8px 40px rgba(0,0,0,.6); }
+
+  .title { top: 230px; font-size: 84px; font-weight: 700; line-height: 1.3; }
+  .sub { font-size: 52px; font-weight: 500; line-height: 1.5; }
+  .em { color: var(--rose); }
+
+  .label {
+    position: absolute; font-size: 44px; font-weight: 700; color: var(--rose);
+    background: rgba(255,255,255,.88); padding: 6px 26px; border-radius: 40px;
+    border: 3px solid var(--rose); white-space: nowrap; transform-origin: center;
+  }
+
+  .step {
+    position: absolute; left: 110px; width: 860px; height: 150px; border-radius: 28px;
+    background: rgba(255,255,255,.85); box-shadow: 0 10px 30px rgba(120,60,60,.12);
+    display: flex; align-items: center; padding: 0 36px; gap: 30px;
+  }
+  .step .num {
+    flex: 0 0 auto; width: 96px; height: 96px; border-radius: 50%; background: var(--rose); color: #fff;
+    font-family: "Cormorant Garamond", serif; font-size: 58px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step .txt { font-size: 46px; font-weight: 700; line-height: 1.3; }
+  .step .txt small { display: block; font-size: 32px; font-weight: 500; color: #8a6a66; }
+  .arrowDown { position: absolute; left: 510px; width: 60px; height: 40px; }
+
+  #botoxTitle { top: 200px; }
+  #botoxTitle .big { font-size: 150px; font-weight: 900; letter-spacing: .06em;
+    background: linear-gradient(100deg, #8c3a4e 0%, var(--rose) 30%, #f3c9a8 50%, var(--rose) 70%, #8c3a4e 100%);
+    background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+  #botoxTitle .small { font-size: 48px; font-weight: 700; color: var(--ink); margin-top: 6px; }
+
+  .chip {
+    position: absolute; left: 140px; width: 800px; height: 104px; border-radius: 60px;
+    background: #fff; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center;
+    font-size: 44px; font-weight: 700; color: var(--ink); box-shadow: 0 8px 24px rgba(160,110,80,.15);
+  }
+  .chip b { color: var(--rose); margin: 0 .2em; }
+
+  .disc { left: 70px; width: 940px; text-align: left; font-size: 25px; line-height: 1.55; color: #6d5a58; }
+  .disc.light { color: rgba(255,240,235,.72); }
+
+  #cta1 { top: 560px; font-size: 104px; font-weight: 700; color: #fff; line-height: 1.35; }
+  #cta2 { top: 860px; font-size: 52px; color: #f3dcd3; font-weight: 500; }
+  #brand { top: 1040px; font-family: "Cormorant Garamond", serif; font-size: 110px; letter-spacing: .32em; color: var(--gold); font-weight: 600; padding-left: .32em; }
+  #brandLine { top: 1190px; }
+  #brandLine i { display: inline-block; height: 2px; background: var(--gold); }
+  #btn {
+    position: absolute; left: 90px; top: 1290px; width: 900px; height: 140px; border-radius: 80px;
+    background: linear-gradient(90deg, #c0566b, #d9788a); color: #fff; font-size: 42px; font-weight: 700; white-space: nowrap;
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 40px rgba(192,86,107,.45);
+  }
+  #mark { top: 120px; font-family: "Cormorant Garamond", serif; font-size: 40px; letter-spacing: .4em; color: var(--rose); padding-left: .4em; }
+  .spark { position: absolute; width: 60px; height: 60px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="bgIvory"></div>
+  <div class="layer" id="bgDark"></div>
+
+  <div id="face">
+    <svg viewBox="0 0 600 700">
+      <defs>
+        <radialGradient id="skin" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stop-color="#fbe7dc"/>
+          <stop offset="70%" stop-color="#f1d2c3"/>
+          <stop offset="100%" stop-color="#e3b9a6"/>
+        </radialGradient>
+        <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4a3230"/>
+          <stop offset="100%" stop-color="#2c1d1c"/>
+        </linearGradient>
+        <radialGradient id="cheek" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ec9f99" stop-opacity=".45"/>
+          <stop offset="100%" stop-color="#ec9f99" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.2"/></filter>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8"/></filter>
+      </defs>
+      <!-- neck -->
+      <path d="M240 590 L240 640 C 200 670 150 680 120 700 L480 700 C 450 680 400 670 360 640 L360 590 Z" fill="#ecc6b5"/>
+      <!-- back hair -->
+      <path d="M108 330 C 88 150 190 30 300 30 C 410 30 512 150 492 330 C 506 430 502 520 474 590 C 450 600 425 585 418 560 L 182 560 C 175 585 150 600 126 590 C 98 520 94 430 108 330 Z" fill="url(#hair)"/>
+      <!-- face -->
+      <path d="M300 70 C 430 70 495 175 495 320 C 495 470 420 610 300 648 C 180 610 105 470 105 320 C 105 175 170 70 300 70 Z" fill="url(#skin)"/>
+      <ellipse cx="190" cy="440" rx="70" ry="45" fill="url(#cheek)"/>
+      <ellipse cx="410" cy="440" rx="70" ry="45" fill="url(#cheek)"/>
+      <!-- front hair / hairline -->
+      <path d="M100 330 C 88 160 190 30 300 30 C 410 30 512 160 500 330 C 488 240 458 178 398 152 C 342 130 290 140 250 110 C 226 140 192 150 162 176 C 126 212 108 262 100 330 Z" fill="url(#hair)"/>
+
+      <!-- muscles (S4) -->
+      <g id="muscles" opacity="0">
+        <path d="M185 145 C 210 140 250 140 285 145 L 282 255 C 250 250 215 252 190 262 Z" fill="#e0606f" opacity=".55"/>
+        <path d="M415 145 C 390 140 350 140 315 145 L 318 255 C 350 250 385 252 410 262 Z" fill="#e0606f" opacity=".55"/>
+        <path d="M290 280 C 260 262 225 258 200 266 C 225 270 262 282 288 300 Z" fill="#c8384d" opacity=".75"/>
+        <path d="M310 280 C 340 262 375 258 400 266 C 375 270 338 282 312 300 Z" fill="#c8384d" opacity=".75"/>
+        <ellipse cx="235" cy="335" rx="78" ry="56" fill="none" stroke="#e0606f" stroke-width="22" opacity=".45"/>
+        <ellipse cx="365" cy="335" rx="78" ry="56" fill="none" stroke="#e0606f" stroke-width="22" opacity=".45"/>
+      </g>
+
+      <!-- features -->
+      <g fill="none" stroke="#5a3a35" stroke-linecap="round" stroke-linejoin="round">
+        <path id="browL" d="M190 282 Q 232 262 282 280" stroke-width="9" stroke="#4a3230"/>
+        <path id="browR" d="M410 282 Q 368 262 318 280" stroke-width="9" stroke="#4a3230"/>
+        <path d="M200 338 Q 238 356 276 338" stroke-width="5"/>
+        <path d="M400 338 Q 362 356 324 338" stroke-width="5"/>
+        <path d="M206 346 l -8 10 M222 352 l -5 12 M240 354 l -2 12 M258 351 l 2 12" stroke-width="3"/>
+        <path d="M394 346 l 8 10 M378 352 l 5 12 M360 354 l 2 12 M342 351 l -2 12" stroke-width="3"/>
+        <path d="M303 312 C 300 360 298 395 312 412 C 304 422 290 422 282 416" stroke-width="4" opacity=".6"/>
+        <path d="M252 500 Q 276 486 300 496 Q 324 486 348 500 Q 324 512 300 508 Q 276 512 252 500 Z" fill="#cf7d7d" stroke="#b5646a" stroke-width="3"/>
+        <path d="M252 500 Q 300 540 348 500" fill="#d98b88" stroke="#b5646a" stroke-width="3"/>
+      </g>
+
+      <!-- wrinkles -->
+      <g id="wrinkles" fill="none" stroke="#7d4f46" stroke-linecap="round" filter="url(#soft)">
+        <g id="wForehead">
+          <path pathLength="1" d="M205 178 Q 300 162 395 178"/>
+          <path pathLength="1" d="M195 205 Q 300 188 405 205"/>
+          <path pathLength="1" d="M210 232 Q 300 216 390 232"/>
+        </g>
+        <g id="wGlabella">
+          <path pathLength="1" d="M289 248 Q 285 272 291 298"/>
+          <path pathLength="1" d="M311 248 Q 315 272 309 298"/>
+        </g>
+        <g id="wCrow">
+          <path pathLength="1" d="M168 318 L 138 306"/>
+          <path pathLength="1" d="M166 334 L 132 334"/>
+          <path pathLength="1" d="M168 350 L 138 364"/>
+          <path pathLength="1" d="M432 318 L 462 306"/>
+          <path pathLength="1" d="M434 334 L 468 334"/>
+          <path pathLength="1" d="M432 350 L 462 364"/>
+        </g>
+      </g>
+
+      <!-- muscle arrows (S4) -->
+      <g id="arrows" fill="none" stroke="#c0566b" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0">
+        <g id="arrL"><path d="M232 300 L 268 300 M256 290 L 268 300 L 256 310"/></g>
+        <g id="arrR"><path d="M368 300 L 332 300 M344 290 L 332 300 L 344 310"/></g>
+        <g id="arrU"><path d="M300 238 L 300 196 M290 208 L 300 196 L 310 208"/></g>
+      </g>
+
+      <!-- glow when smoothed (S5) -->
+      <ellipse id="smoothGlow" cx="300" cy="260" rx="190" ry="140" fill="#fff6ef" filter="url(#glow)" opacity="0"/>
+    </svg>
+  </div>
+
+  <div class="layer" id="vignette"></div>
+  <div class="layer" id="bgPlum"></div>
+
+  <!-- S1 hook -->
+  <div class="abs hook serif" id="h1">そのシワ、</div>
+  <div class="abs hook serif" id="h2">放置してて</div>
+  <div class="abs hook serif" id="h3">平気？！</div>
+
+  <!-- brand mark -->
+  <div class="abs" id="mark">ERFOLTIER</div>
+
+  <!-- S2 -->
+  <div class="abs title serif" id="t2">気づけば、<span class="em">ここにも。</span></div>
+  <div class="label" id="lb1">おでこ</div>
+  <div class="label" id="lb2">眉間</div>
+  <div class="label" id="lb3">目尻</div>
+  <div class="abs sub" id="s2" style="top:1235px">鏡を見るたび、<br>気になっていませんか？</div>
+
+  <!-- S3 -->
+  <div class="abs title serif" id="t3">表情ジワは<br><span class="em">放っておくと…</span></div>
+  <div class="step" id="st1"><div class="num">1</div><div class="txt">表情を動かしたときだけ<small>笑う・しかめる・驚く</small></div></div>
+  <div class="step" id="st2"><div class="num">2</div><div class="txt">クセになって、跡が残りやすく<small>くり返すほど折りジワに</small></div></div>
+  <div class="step" id="st3"><div class="num">3</div><div class="txt em">無表情でも消えない<br>「刻まれたシワ」へ</div></div>
+
+  <!-- S4 -->
+  <div class="abs title serif" id="t4">原因は<br><span class="em">表情筋の“動きのクセ”</span></div>
+  <div class="abs sub" id="s4" style="top:1235px">毎日くり返す筋肉の動きが<br>シワを深くしていきます</div>
+  <div class="abs serif" id="s4b" style="top:1235px; font-size:96px; font-weight:900; color:var(--rose)">だからこそ――</div>
+
+  <!-- S5 -->
+  <div class="abs serif" id="botoxTitle"><div class="big">ボトックス</div><div class="small">筋肉の動きをやわらげ、シワをできにくく</div></div>
+  <div class="chip" id="c1">メスを使わない<b>注射</b>治療</div>
+  <div class="chip" id="c2">施術時間 <b>約10〜15分</b></div>
+  <div class="chip" id="c3">効果の目安 <b>約3〜6ヶ月</b>※</div>
+  <div class="abs disc" id="d5" style="top:1500px">※効果・持続期間には個人差があります。自由診療です。主なリスク・副作用：注射部位の内出血・腫れ・痛み、頭痛、まぶたの重さ等。医師の診察のうえ適応を判断します。</div>
+
+  <!-- S6 -->
+  <div class="abs serif" id="cta1">シワが“刻まれる”<br>その前に。</div>
+  <div class="abs" id="cta2">気になり始めた今が、相談どき。</div>
+  <div class="abs" id="brand">ERFOLTIER</div>
+  <div class="abs" id="brandLine"><i id="bl"></i></div>
+  <div id="btn">ご予約・ご相談はプロフィールのリンクから</div>
+  <div class="abs disc light" id="d6" style="top:1500px">※自由診療。効果には個人差があります。主なリスク・副作用：内出血・腫れ・痛み、頭痛、まぶたの重さ等。詳しくはカウンセリングにてご説明します。</div>
+
+  <div class="layer" id="flash"></div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const easeOut = x => 1 - Math.pow(1 - x, 3);
+const easeIn = x => x * x * x;
+const easeInOut = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const backOut = x => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+
+// Keyframe interpolation: keys = [[t, v], ...], v number or array.
+function kf(t, keys, ease = easeInOut) {
+  if (t <= keys[0][0]) return keys[0][1];
+  for (let i = 0; i < keys.length - 1; i++) {
+    const [t0, v0] = keys[i], [t1, v1] = keys[i + 1];
+    if (t <= t1) {
+      const x = ease(seg(t, t0, t1));
+      return Array.isArray(v0) ? v0.map((v, j) => lerp(v, v1[j], x)) : lerp(v0, v1, x);
+    }
+  }
+  return keys[keys.length - 1][1];
+}
+
+// Visible from a to b with fade/slide in and out.
+function show(el, t, a, b, { dur = .45, dy = 40, scaleFrom = 1, outDur = .35 } = {}) {
+  const i = easeOut(seg(t, a, a + dur));
+  const o = 1 - easeIn(seg(t, b - outDur, b));
+  const op = Math.min(i, o);
+  el.style.opacity = op;
+  el.style.visibility = op <= 0.001 ? 'hidden' : 'visible';
+  return { i, o, op, y: (1 - i) * dy, s: lerp(scaleFrom, 1, i) };
+}
+function place(el, st, extra = '') {
+  el.style.transform = `translateY(${st.y}px) scale(${st.s}) ${extra}`;
+}
+
+// Face position keyframes: [t, [cx, cy, width]] — cx/cy = stage point where face center (300,350) goes.
+const FACE_KEYS = [
+  [0,     [540, 980, 2300]],   // extreme close-up on glabella (shifted below)
+  [3.0,   [540, 980, 2700]],
+  [3.25,  [540, 800, 620]],
+  [8.0,   [540, 800, 620]],
+  [8.6,   [540, 730, 400]],
+  [14.0,  [540, 730, 400]],
+  [14.6,  [540, 850, 580]],
+  [19.0,  [540, 850, 580]],
+  [19.6,  [540, 800, 450]],
+  [25.0,  [540, 810, 450]],
+  [25.5,  [540, 810, 450]],
+];
+
+const wrinkleGroups = ['wForehead', 'wGlabella', 'wCrow'].map(id => $(id));
+
+function wrinkleDepth(t) {
+  return kf(t, [[0, 1], [3.1, 1], [3.3, .45], [8.4, .45], [9.6, .6], [11.1, .8], [12.6, 1], [19.8, 1], [22.4, .05]]);
+}
+function wrinkleDraw(t, i) {
+  if (t < 3.25) return 1;
+  const starts = [3.9, 4.7, 5.5];
+  return easeOut(seg(t, starts[i], starts[i] + .7));
+}
+
+function render(t) {
+  // ---------- backgrounds ----------
+  const darkOp = 1 - seg(t, 3.0, 3.35);
+  $('bgDark').style.opacity = darkOp;
+  $('vignette').style.opacity = (t < 3.35 ? .9 * darkOp : 0) + 0.55 * seg(t, 12.2, 13.0) * (1 - seg(t, 18.8, 19.6));
+  $('bgPlum').style.opacity = easeInOut(seg(t, 24.9, 25.5));
+
+  // flash on hook slam and on botox reveal
+  const f1 = t >= 1.45 ? .75 * (1 - easeOut(seg(t, 1.45, 1.8))) : 0;
+  const f2 = t >= 3.0 && t < 3.6 ? .5 * Math.sin(Math.PI * seg(t, 3.0, 3.5)) : 0;
+  const f3 = t >= 19.0 ? .55 * (1 - easeOut(seg(t, 19.0, 19.7))) : 0;
+  $('flash').style.opacity = Math.max(f1, f2, f3);
+
+  // ---------- face ----------
+  let [cx, cy, w] = kf(t, FACE_KEYS);
+  const s = w / 600;
+  // In the hook, aim the camera at the glabella (300,272) instead of face center.
+  const focusY = lerp(272, 350, seg(t, 3.0, 3.25));
+  const focusX = 300;
+  let shakeX = 0, shakeY = 0;
+  if (t > 1.45 && t < 1.85) {
+    const k = 1 - seg(t, 1.45, 1.85);
+    shakeX = Math.sin(t * 190) * 22 * k; shakeY = Math.cos(t * 160) * 16 * k;
+  }
+  const faceEl = $('face');
+  faceEl.style.transform = `translate(${cx - focusX * s + shakeX}px, ${cy - focusY * s + shakeY}px) scale(${s})`;
+  faceEl.style.filter = t < 3.25 ? `brightness(${lerp(.55, .7, seg(t, 0, 3))}) contrast(1.15) saturate(.8)` : 'none';
+  faceEl.style.opacity = 1 - seg(t, 25.0, 25.5);
+
+  // wrinkles
+  const d = wrinkleDepth(t);
+  wrinkleGroups.forEach((g, i) => {
+    const draw = wrinkleDraw(t, i);
+    g.style.opacity = clamp(.25 + .75 * d) * (d < .1 ? d / .1 : 1);
+    g.setAttribute('stroke-width', (1.5 + 3.5 * d) / (t < 3.25 ? 1.6 : 1));
+    g.querySelectorAll('path').forEach(p => {
+      p.style.strokeDasharray = '1 1';
+      p.style.strokeDashoffset = 1 - draw;
+    });
+  });
+
+  // muscles + arrows (S4)
+  const mOn = easeOut(seg(t, 14.5, 15.1)) * (1 - easeInOut(seg(t, 19.4, 20.8)));
+  const pulse = .75 + .25 * Math.sin(t * 7);
+  $('muscles').setAttribute('opacity', mOn * pulse);
+  $('arrows').setAttribute('opacity', mOn * (t < 19.2 ? 1 : 0));
+  const pull = (Math.sin(t * 7) + 1) / 2 * 8;
+  $('arrL').setAttribute('transform', `translate(${pull} 0)`);
+  $('arrR').setAttribute('transform', `translate(${-pull} 0)`);
+  $('arrU').setAttribute('transform', `translate(0 ${-pull})`);
+  // brows squeeze slightly in S4
+  const sq = mOn * (Math.sin(t * 7) + 1) / 2;
+  $('browL').setAttribute('transform', `translate(${6 * sq} ${3 * sq})`);
+  $('browR').setAttribute('transform', `translate(${-6 * sq} ${3 * sq})`);
+  $('smoothGlow').setAttribute('opacity', .75 * Math.sin(Math.PI * seg(t, 20.2, 23.6)));
+
+  // ---------- S1 hook ----------
+  const hookOut = seg(t, 2.75, 3.15);
+  {
+    const a = show($('h1'), t, -.12, 3.15, { dur: .28, dy: 0, scaleFrom: 1.35, outDur: .4 });
+    place($('h1'), a, `scale(${1 + .25 * hookOut})`);
+    const b = show($('h2'), t, .8, 3.15, { dur: .28, dy: 0, scaleFrom: 1.35, outDur: .4 });
+    place($('h2'), b, `scale(${1 + .25 * hookOut})`);
+    const h3 = $('h3');
+    const c = show(h3, t, 1.45, 3.15, { dur: .22, dy: 0, outDur: .4 });
+    const sl = lerp(2.4, 1, backOut(seg(t, 1.45, 1.75)));
+    const k = 1 - seg(t, 1.45, 1.95);
+    const jx = Math.sin(t * 210) * 18 * k, jr = Math.sin(t * 150) * 4 * k;
+    // gentle heartbeat after slam
+    const beat = 1 + .04 * Math.max(0, Math.sin((t - 1.95) * 9)) * (t > 1.95 ? 1 : 0);
+    h3.style.transform = `translateX(${jx}px) rotate(${jr}deg) scale(${sl * beat * (1 + .3 * hookOut)})`;
+  }
+
+  // brand mark
+  { const m = show($('mark'), t, 3.4, 25.0, { dur: .6, dy: 0 }); place($('mark'), m); }
+
+  // ---------- S2 ----------
+  { const a = show($('t2'), t, 3.45, 8.05); place($('t2'), a); }
+  // labels anchored to face coordinates
+  const faceToStage = (x, y) => [cx - focusX * s + x * s, cy - focusY * s + y * s];
+  const labels = [
+    ['lb1', 3.95, 300, 165, 0, -140],
+    ['lb2', 4.75, 300, 272, 230, 0],
+    ['lb3', 5.55, 140, 334, -60, 120],
+  ];
+  labels.forEach(([id, a, fx, fy, ox, oy]) => {
+    const el = $(id);
+    const st = show(el, t, a, 8.05, { dur: .4, dy: 0, scaleFrom: .4 });
+    const [px, py] = faceToStage(fx, fy);
+    const wEl = el.offsetWidth, hEl = el.offsetHeight;
+    el.style.left = (px + ox - wEl / 2) + 'px';
+    el.style.top = (py + oy - hEl / 2) + 'px';
+    el.style.transform = `scale(${lerp(.4, 1, backOut(st.i))})`;
+  });
+  { const a = show($('s2'), t, 6.3, 8.05); place($('s2'), a); }
+
+  // ---------- S3 ----------
+  { const a = show($('t3'), t, 8.15, 14.05); place($('t3'), a); }
+  [['st1', 8.6], ['st2', 10.1], ['st3', 11.6]].forEach(([id, a], i) => {
+    const el = $(id);
+    el.style.top = (980 + i * 180) + 'px';
+    const st = show(el, t, a, 14.05, { dur: .45, dy: 0 });
+    const x = (1 - easeOut(st.i)) * 120;
+    const active = (i === 0 && t < 10.1) || (i === 1 && t >= 10.1 && t < 11.6) || (i === 2 && t >= 11.6);
+    el.style.transform = `translateX(${x}px) scale(${active ? 1.03 : 1})`;
+    el.style.background = active ? '#fff' : 'rgba(255,255,255,.7)';
+    el.style.boxShadow = active ? '0 14px 40px rgba(192,86,107,.28)' : '0 6px 20px rgba(120,60,60,.08)';
+  });
+
+  // ---------- S4 ----------
+  { const a = show($('t4'), t, 14.2, 19.0); place($('t4'), a); }
+  { const a = show($('s4'), t, 15.0, 17.45); place($('s4'), a); }
+  { const a = show($('s4b'), t, 17.5, 19.0, { dur: .35, dy: 0, scaleFrom: 1.4 }); place($('s4b'), a); }
+
+  // ---------- S5 ----------
+  {
+    const bt = $('botoxTitle');
+    const a = show(bt, t, 19.0, 25.0, { dur: .5, dy: 0, scaleFrom: 1.25 });
+    place(bt, a);
+    bt.querySelector('.big').style.backgroundPosition = `${lerp(100, 0, seg(t, 19.0, 21.0))}% 0`;
+    const sm = bt.querySelector('.small');
+    sm.style.opacity = easeOut(seg(t, 19.7, 20.2));
+  }
+  [['c1', 21.2], ['c2', 21.8], ['c3', 22.4]].forEach(([id, a], i) => {
+    const el = $(id);
+    el.style.top = (1090 + i * 130) + 'px';
+    const st = show(el, t, a, 25.0, { dur: .4, dy: 50 });
+    place(el, st);
+  });
+  { const a = show($('d5'), t, 21.2, 25.0, { dur: .4, dy: 0 }); place($('d5'), a); }
+  // keep face under the title in S5 lower: handled by FACE_KEYS
+
+  // ---------- S6 ----------
+  { const a = show($('cta1'), t, 25.4, 30.5, { dur: .6, dy: 50 }); place($('cta1'), a); }
+  { const a = show($('cta2'), t, 26.1, 30.5, { dur: .5 }); place($('cta2'), a); }
+  { const a = show($('brand'), t, 26.7, 30.5, { dur: .7, dy: 0, scaleFrom: 1.1 }); place($('brand'), a); }
+  $('bl').style.width = (560 * easeInOut(seg(t, 26.9, 27.7))) + 'px';
+  $('brandLine').style.opacity = t > 26.9 ? 1 : 0;
+  {
+    const btn = $('btn');
+    const st = show(btn, t, 27.4, 30.5, { dur: .45, dy: 40 });
+    const p = t > 28 ? 1 + .035 * Math.sin((t - 28) * 6) : 1;
+    btn.style.transform = `translateY(${st.y}px) scale(${p})`;
+  }
+  { const a = show($('d6'), t, 27.4, 30.5, { dur: .4, dy: 0 }); place($('d6'), a); }
+}
+
+window.render = render;
+// Preview mode: play in real time when opened directly.
+if (!location.search.includes('capture')) {
+  const t0 = performance.now();
+  const loop = () => { render(((performance.now() - t0) / 1000) % 30); requestAnimationFrame(loop); };
+  document.fonts.ready.then(loop);
+} else {
+  render(0);
+}
+</script>
+</body>
+</html>
